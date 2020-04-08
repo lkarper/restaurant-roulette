@@ -38,7 +38,7 @@ function displayDirections(data) {
             if (i < leg.maneuvers.length - 1) {
                 directionsHTMLArray.push(`
                     <li>
-                        <p><img src="${leg.maneuvers[i]["iconUrl"]}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
+                        <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
                         <img src="https${leg.maneuvers[i]["mapUrl"].slice(4)}" alt="route-map">
                         <p>After you travel approximately ${formatDistance(leg.maneuvers[i]["distance"])} and after about ${formatTime(leg.maneuvers[i]["time"])}:</p> 
                     </li>`);
@@ -106,7 +106,6 @@ function fetchDeparturePoint() {
 function fetchRestaurants() {
     const baseURL = "https://api.foursquare.com/v2/venues/explore?"
     const params = getQueryParams();
-    console.log(params);
     fetch(`${baseURL}${params}`)
         .then(response => {
             if (response.ok) {
