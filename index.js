@@ -39,7 +39,7 @@ function displayDirections(data) {
                 directionsHTMLArray.push(`
                     <li>
                         <p><img src="${leg.maneuvers[i]["iconUrl"]}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
-                        <img src="${leg.maneuvers[i]["mapUrl"]}" alt="route-map">
+                        <img src="https${leg.maneuvers[i]["mapUrl"].slice(4)}" alt="route-map">
                         <p>After you travel approximately ${formatDistance(leg.maneuvers[i]["distance"])} and after about ${formatTime(leg.maneuvers[i]["time"])}:</p> 
                     </li>`);
             } else {
