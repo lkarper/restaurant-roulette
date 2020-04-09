@@ -32,7 +32,6 @@ function displayDirections(data) {
     const directionsHTMLArray = [];
     const legs = data.route.legs;
     for (let leg of legs) {
-        console.log(leg);
         for (let i = 0; i < leg.maneuvers.length; i++) {
             console.log(leg.maneuvers[i]);
             if (i < leg.maneuvers.length - 1) {
@@ -45,7 +44,7 @@ function displayDirections(data) {
             } else {
                 directionsHTMLArray.push(`
                     <li>
-                        <p><img src="${leg.maneuvers[i]["iconUrl"]}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
+                        <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
                         <p>You will have reached your destination.</p> 
                     </li>`);
             }
