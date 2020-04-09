@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Roulette</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
 </head>
 <body>
     <header>
@@ -14,92 +16,177 @@
         <form id="restaurant-form">
             <fieldset>
                 <legend>Please enter some basic information about where you'd like to eat</legend>
-                <label for="location">Where would you like to eat?</label>
-                <input type="text" id="location" placeholder="e.g. New York, NY; 10010" required>
-                <label for="radius">How many miles are you willing to travel from this location?</label>
-                <input type="number" id="radius" min="1" max="60" required>
+                <div id="location-info">
+                    <label for="location">Where would you like to eat?</label>
+                    <input type="text" id="location" placeholder="e.g. New York, NY; 10010" required>
+                    <label for="radius">How many miles are you willing to travel from this location?</label>
+                    <input type="number" id="radius" min="1" max="60" required>
+                </div>
             </fieldset>
             <fieldset id="categories">
-                <legend class="categories">You don't have to, but if you'd like, choose one or more categories to include in your search</legend>
-                <input type="checkbox" value="4bf58dd8d48988d1c8941735" id="African" name="African">
-                <label for="African">African Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d14e941735" id="American" name="American">
-                <label for="American">American Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d142941735" id="Asian" name="Asian">
-                <label for="Asian">Asian Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d1df931735" id="BBQ" name="BBQ">
-                <label for="BBQ">BBQ Joint</label>
-                <input type="checkbox" value="4bf58dd8d48988d179941735" id="Bagels" name="Bagels">
-                <label for="Bagels">Bagel Shop</label>
-                <input type="checkbox" value="4bf58dd8d48988d16a941735" id="Bakery" name="Bakery">
-                <label for="Bakery">Bakery</label>
-                <input type="checkbox" value="52e81612bcbc57f1066b79f1" id="Bistro" name="Bistro">
-                <label for="Bistro">Bistro</label>
-                <input type="checkbox" value="4bf58dd8d48988d143941735" id="Breakfast" name="Breakfast">
-                <label for="Breakfast">Breakfast Spot</label>
-                <input type="checkbox" value="52e81612bcbc57f1066b79f4" id="Buffet" name="Buffet">
-                <label for="Buffet">Buffet</label>
-                <input type="checkbox" value="4bf58dd8d48988d16c941735" id="Burgers" name="Burgers">
-                <label for="Burgers">Burger Joint</label>
-                <input type="checkbox" value="4bf58dd8d48988d16d941735" id="Café" name="Café">
-                <label for="Café">Café</label>
-                <input type="checkbox" value="4bf58dd8d48988d1e0931735" id="Coffee-Shop" name="Coffee-Shop">
-                <label for="Coffee-Shop">Coffee Shop</label>
-                <input type="checkbox" value="52e81612bcbc57f1066b7a00" id="Comfort-Food" name="Comfort-Food">
-                <label for="Comfort-Food">Comfort Food Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d146941735" id="Deli-Bodega" name="Deli-Bodega">
-                <label for="Deli-Bodega">Deli / Bodega</label>
-                <input type="checkbox" value="4bf58dd8d48988d147941735" id="Diner" name="Diner">
-                <label for="Diner">Diner</label>
-                <input type="checkbox" value="4bf58dd8d48988d148941735" id="Donuts" name="Donuts">
-                <label for="Donuts">Donut Shop</label>
-                <input type="checkbox" value="4bf58dd8d48988d16e941735" id="Fast-Food" name="Fast-Food">
-                <label for="Fast-Food">Fast Food Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d10c941735" id="French" name="French">
-                <label for="French">French Restaurant</label>
-                <input type="checkbox" value="4c2cd86ed066bed06c3c5209" id="Gluten-free" name="Gluten-free">
-                <label for="Gluten-free">Gluten-free Restaurant</label>
-                <input type="checkbox" value="52e81612bcbc57f1066b79ff" id="Halal" name="Halal">
-                <label for="Halal">Halal Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d10f941735" id="Indian" name="Indian">
-                <label for="Indian">Indian Restaurant</label>
-                <input type="checkbox" value="52e81612bcbc57f1066b7a06" id="Irish" name="Irish">
-                <label for="Irish">Irish Pub</label>
-                <input type="checkbox" value="4bf58dd8d48988d110941735" id="Italian" name="Italian">
-                <label for="Italian">Italian Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d1be941735" id="Latin-American" name="Latin-American">
-                <label for="Latin-American">Latin American Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d1c1941735" id="Mexican" name="Mexican">
-                <label for="Mexican">Mexican Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d115941735" id="Middle-Eastern" name="Middle-Eastern">
-                <label for="Middle-Eastern">Middle Eastern Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d1ca941735" id="Pizza" name="Pizza">
-                <label for="Pizza">Pizza Place</label>
-                <input type="checkbox" value="4bf58dd8d48988d1c4941735" id="Restaurant" name="Restaurant">
-                <label for="Restaurant">Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d1bd941735" id="Salad" name="Salad">
-                <label for="Salad">Salad Place</label>
-                <input type="checkbox" value="4bf58dd8d48988d1c5941735" id="Sandwiches" name="Sandwiches">
-                <label for="Sandwiches">Sandwich Place</label>
-                <input type="checkbox" value="4bf58dd8d48988d1ce941735" id="Seafood" name="Seafood">
-                <label for="Seafood">Seafood Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d1cc941735" id="Steakhouse" name="Steakhouse">
-                <label for="Steakhouse">Steakhouse</label>
-                <input type="checkbox" value="4bf58dd8d48988d1d3941735" id="Vegetarian-Vegan" name="Vegetarian -Vegan">
-                <label for="Vegetarian-Vegan">Vegetarian / Vegan Restaurant</label>
-                <input type="checkbox" value="4bf58dd8d48988d14c941735" id="Wings" name="Wings">
-                <label for="Wings">Wings Joint</label>
+                <legend>You don't have to, but if you'd like, choose one or more categories to include in your search</legend>
+                <div class="categories-container">
+                    <label for="African">
+                        <input type="checkbox" value="4bf58dd8d48988d1c8941735" id="African" name="African">
+                        African
+                    </label>
+                    <label for="American">
+                        <input type="checkbox" value="4bf58dd8d48988d14e941735" id="American" name="American">
+                        American
+                    </label>
+                    <label for="Asian">
+                        <input type="checkbox" value="4bf58dd8d48988d142941735" id="Asian" name="Asian">
+                        Asian
+                    </label>
+                    <label for="BBQ">
+                        <input type="checkbox" value="4bf58dd8d48988d1df931735" id="BBQ" name="BBQ">
+                        BBQ
+                    </label>
+                    <label for="Bagels">
+                        <input type="checkbox" value="4bf58dd8d48988d179941735" id="Bagels" name="Bagels">
+                        Bagels
+                    </label>
+                    <label for="Bakery">
+                        <input type="checkbox" value="4bf58dd8d48988d16a941735" id="Bakery" name="Bakery">
+                        Bakery
+                    </label>
+                    <label for="Bistro">
+                        <input type="checkbox" value="52e81612bcbc57f1066b79f1" id="Bistro" name="Bistro">
+                        Bistro
+                    </label>
+                    <label for="Breakfast">
+                        <input type="checkbox" value="4bf58dd8d48988d143941735" id="Breakfast" name="Breakfast">
+                        Breakfast
+                    </label>
+                    <label for="Buffet">
+                        <input type="checkbox" value="52e81612bcbc57f1066b79f4" id="Buffet" name="Buffet">
+                        Buffet
+                    </label>
+                    
+                    <label for="Burgers">
+                        <input type="checkbox" value="4bf58dd8d48988d16c941735" id="Burgers" name="Burgers">
+                        Burgers
+                    </label>
+                    <label for="Café">
+                        <input type="checkbox" value="4bf58dd8d48988d16d941735" id="Café" name="Café">
+                        Café
+                    </label>
+                    <label for="Coffee-Shop">
+                        <input type="checkbox" value="4bf58dd8d48988d1e0931735" id="Coffee-Shop" name="Coffee-Shop">
+                        Coffee Shop
+                    </label>
+                    <label for="Comfort-Food">
+                        <input type="checkbox" value="52e81612bcbc57f1066b7a00" id="Comfort-Food" name="Comfort-Food">
+                        Comfort Food
+                    </label>
+                    <label for="Deli-Bodega">
+                        <input type="checkbox" value="4bf58dd8d48988d146941735" id="Deli-Bodega" name="Deli-Bodega">
+                        Deli
+                    </label>
+                    <label for="Diner">
+                        <input type="checkbox" value="4bf58dd8d48988d147941735" id="Diner" name="Diner">
+                        Diner
+                    </label>
+                    <label for="Donuts">
+                        <input type="checkbox" value="4bf58dd8d48988d148941735" id="Donuts" name="Donuts">
+                        Donuts
+                    </label>
+                    <label for="Fast-Food">
+                        <input type="checkbox" value="4bf58dd8d48988d16e941735" id="Fast-Food" name="Fast-Food">
+                        Fast Food
+                    </label>
+                    <label for="French">
+                        <input type="checkbox" value="4bf58dd8d48988d10c941735" id="French" name="French">
+                        French
+                    </label>
+                    <label for="Gluten-free">
+                        <input type="checkbox" value="4c2cd86ed066bed06c3c5209" id="Gluten-free" name="Gluten-free">
+                        Gluten-free
+                    </label>
+                    <label for="Halal">
+                        <input type="checkbox" value="52e81612bcbc57f1066b79ff" id="Halal" name="Halal">
+                        Halal
+                    </label>
+                    <label for="Indian">
+                        <input type="checkbox" value="4bf58dd8d48988d10f941735" id="Indian" name="Indian">
+                        Indian
+                    </label>
+                    
+                    <label for="Irish">
+                        <input type="checkbox" value="52e81612bcbc57f1066b7a06" id="Irish" name="Irish">
+                        Irish Pub
+                    </label>
+                    <label for="Italian">
+                        <input type="checkbox" value="4bf58dd8d48988d110941735" id="Italian" name="Italian">
+                        Italian
+                    </label>
+                    
+                    <label for="Latin-American">
+                        <input type="checkbox" value="4bf58dd8d48988d1be941735" id="Latin-American" name="Latin-American">
+                        Latin American
+                    </label>
+                    <label for="Mexican">
+                        <input type="checkbox" value="4bf58dd8d48988d1c1941735" id="Mexican" name="Mexican">
+                        Mexican
+                    </label>
+                    <label for="Middle-Eastern">
+                        <input type="checkbox" value="4bf58dd8d48988d115941735" id="Middle-Eastern" name="Middle-Eastern">
+                        Middle Eastern
+                    </label>
+                    <label for="Pizza">
+                        <input type="checkbox" value="4bf58dd8d48988d1ca941735" id="Pizza" name="Pizza">
+                        Pizza
+                    </label>
+                    <label for="Restaurant">
+                        <input type="checkbox" value="4bf58dd8d48988d1c4941735" id="Restaurant" name="Restaurant">
+                        Restaurant
+                    </label>
+                    <label for="Salad">
+                        <input type="checkbox" value="4bf58dd8d48988d1bd941735" id="Salad" name="Salad">
+                        Salad
+                    </label>
+                    <label for="Sandwiches">
+                        <input type="checkbox" value="4bf58dd8d48988d1c5941735" id="Sandwiches" name="Sandwiches">
+                        Sandwichs
+                    </label>
+                    <label for="Seafood">
+                        <input type="checkbox" value="4bf58dd8d48988d1ce941735" id="Seafood" name="Seafood">
+                        Seafood
+                    </label>
+                    <label for="Steakhouse">
+                        <input type="checkbox" value="4bf58dd8d48988d1cc941735" id="Steakhouse" name="Steakhouse">
+                        Steakhouse
+                    </label>
+                    <label for="Vegetarian-Vegan">
+                        <input type="checkbox" value="4bf58dd8d48988d1d3941735" id="Vegetarian-Vegan" name="Vegetarian-Vegan">
+                        Vegetarian / Vegan
+                    </label>
+                    <label for="Wings">
+                        <input type="checkbox" value="4bf58dd8d48988d14c941735" id="Wings" name="Wings">
+                        Wings
+                    </label>
+                </div>
             </fieldset>
             <fieldset>
                 <legend>How much are you willing to pay? (You may select more than one)</legend>
-                <input type="checkbox" id="1" value="1">
-                <label for="1">Less than $10 per entree</label>
-                <input type="checkbox" id="2" value="2">
-                <label for="2">$10-$20 per entree</label>
-                <input type="checkbox" id="3" value="3">
-                <label for="3">$20-$30 per entree</label>
-                <input type="checkbox" id="4" value="4">
-                <label for="4">More than $30 per entree</label>
+                <div class="price-container">
+                    <label for="1">
+                        <input type="checkbox" id="1" value="1">
+                        Less than $10 per entree
+                    </label>
+                    <label for="2">
+                        <input type="checkbox" id="2" value="2">
+                        $10-$20 per entree
+                    </label>
+                    <label for="3">
+                        <input type="checkbox" id="3" value="3">
+                        $20-$30 per entree
+                    </label>
+                    <label for="4">
+                        <input type="checkbox" id="4" value="4">
+                        More than $30 per entree
+                    </label>
+                </div>
             </fieldset>
             <button type="submit" class="spin">Spin that restaurant wheel!</button>
         </form>

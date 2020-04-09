@@ -1,12 +1,14 @@
 const restaurantQueryResults = [];
 let totalRestaurantsFound = 0;
 let currentOffset = 0;
+let queryCounter = 0;
 
 function handleForm() {
     $('#restaurant-form').submit(event => {
         event.preventDefault();
         restaurantQueryResults.splice(0, restaurantQueryResults.length);
         currentOffset = 0;
+        queryCounter = 0;
         fetchRestaurants();
     });
 }
@@ -30,15 +32,18 @@ function fetchDirections(latLong) {
 function displayDirections(data) {
     console.log(data);
     const directionsHTMLArray = [];
+    const totalDistance = roundNumber(data.route.distance, 0.25);
+    const totalTime = roundNumber(data.route.realTime / 60, 1);
     const legs = data.route.legs;
     for (let leg of legs) {
         for (let i = 0; i < leg.maneuvers.length; i++) {
             console.log(leg.maneuvers[i]);
             if (i < leg.maneuvers.length - 1) {
+                const mapURL = fetchDirectionsStepMapURL(`https${leg.maneuvers[i]["mapUrl"].slice(4)}`);
                 directionsHTMLArray.push(`
                     <li>
                         <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
-                        <img src="https${leg.maneuvers[i]["mapUrl"].slice(4)}" alt="route-map">
+                        <img src="${mapURL}" alt="route-map-maneuver-${i+1}">
                         <p>After you travel approximately ${formatDistance(leg.maneuvers[i]["distance"])} and after about ${formatTime(leg.maneuvers[i]["time"])}:</p> 
                     </li>`);
             } else {
@@ -50,7 +55,32 @@ function displayDirections(data) {
             }
         }
     }
-    $('.directions').html(directionsHTMLArray.join('\r'));
+    $('.directions').html(`
+        <p><b>Length of journey:</b> ${totalDistance} mi.</p>
+        <p><b>Estimated time to reach destination:</b> ${totalTime} min.</p>
+        <ol>
+            ${directionsHTMLArray.join('\r')}
+        </ol>
+        `);
+}
+
+function fetchDirectionsStepMapURL(mapBaseURL) {
+    const marker1Coordinates = mapBaseURL.split(/(locations=|\|marker|\|\|)/g)[2].split(",").map(num => parseFloat(num));
+    const marker2Coordinates = mapBaseURL.split(/(locations=|\|marker|\|\|)/g)[6].split(",").map(num => parseFloat(num));
+    let bounds;
+    if (marker1Coordinates[0] > marker2Coordinates[0] && marker1Coordinates[1] > marker2Coordinates[1]) {
+        bounds = `${marker1Coordinates[0]},${marker2Coordinates[1]},${marker2Coordinates[0]},${marker1Coordinates[1]}`;
+    }
+    if (marker1Coordinates[0] > marker2Coordinates[0] && marker1Coordinates[1] < marker2Coordinates[1]) {
+        bounds = `${marker1Coordinates[0]},${marker1Coordinates[1]},${marker2Coordinates[0]},${marker2Coordinates[1]}`;
+    }
+    if (marker1Coordinates[0] < marker2Coordinates[0] && marker1Coordinates[1] < marker2Coordinates[1]) {
+        bounds = `${marker2Coordinates[0]},${marker1Coordinates[1]},${marker1Coordinates[0]},${marker2Coordinates[1]}`;
+    }
+    if (marker1Coordinates[0] < marker2Coordinates[0] && marker1Coordinates[1] > marker2Coordinates[1]) {
+        bounds = `${marker2Coordinates[0]},${marker2Coordinates[1]},${marker1Coordinates[0]},${marker1Coordinates[1]}`;
+    }
+    return `${mapBaseURL.replace(/&center.+&d/g, `&boundingBox=${bounds}&d`)}&margin=20`;
 }
 
 function formatTime(seconds) {
@@ -115,7 +145,7 @@ function fetchRestaurants() {
             }
         })
         .then(responseJson => {
-            console.log(responseJson)
+            console.log(queryCounter, responseJson)
             loadRestaurants(responseJson);
         })
         .catch(error => console.log('error', error));
@@ -125,13 +155,22 @@ function loadRestaurants(data) {
     totalRestaurantsFound = data.response.totalResults;
     const responseGroupsArray = data.response.groups;
     for (let responseGroup of responseGroupsArray) {
-        currentOffset += responseGroup.items.length;
-        restaurantQueryResults.push(...responseGroup.items);
-    }
-    if (restaurantQueryResults.length < totalRestaurantsFound) {
-        fetchRestaurants();
-    } else {
-        pickRestaurant();
+        if (totalRestaurantsFound === 0) {
+            $('.restaurant').html("<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>")
+        } else if (queryCounter === 10 && restaurantQueryResults.length === 0) {
+            $('.restaurant').html("<p>Sorry, looks like something went wrong.  Try again with different parameters.</p>")
+        } else if (queryCounter === 10 && restaurantQueryResults.length !== 0) {
+            pickRestaurant();
+        } else {
+            currentOffset += responseGroup.items.length;
+            restaurantQueryResults.push(...responseGroup.items);
+            if (restaurantQueryResults.length < totalRestaurantsFound) {
+                queryCounter += 1;
+                fetchRestaurants();
+            } else {
+                pickRestaurant();
+            }
+        }
     }
 }
 
@@ -158,6 +197,8 @@ function displayRandomRestaurant(data) {
             <ul>
                 ${addressHTML}
             </ul>
+        <div id="map">
+        </div>
         <p>Categories: </p>
             <ul>
                 ${categoriesHTML}
@@ -175,23 +216,26 @@ function displayRandomRestaurant(data) {
             </ul>
     `);
     if (latLong) {
+        loadMap(latLong, name);
         $('.restaurant').append(`
             <form id="directions-form">
                 <fieldset>
                     <legend>If you'd like directions, please provide an address for the point of departure</legend>
-                    <label for="mode">Mode of travel: </label>
-                    <select id="mode">
-                        <option value="fastest">Driving</option>
-                        <option value="pedestrian">Walking</option>
-                        <option value="bicycle">Cycling</option>
-                    </select>
-                    <label for="street">Street: </label>
-                    <input type="text" id="street" required>
-                    <label for="city">City: </label>
-                    <input type="text" id="city" required>
-                    <label for="state">State: </label>
-                    <input type="text" id="state" required>
-                    <button type="submit">Find Directions</button>
+                    <div class="departure-container">
+                        <label for="mode">Mode of travel: </label>
+                        <select id="mode">
+                            <option value="fastest">Driving</option>
+                            <option value="pedestrian">Walking</option>
+                            <option value="bicycle">Cycling</option>
+                        </select>
+                        <label for="street">Street: </label>
+                        <input type="text" id="street" required>
+                        <label for="city">City: </label>
+                        <input type="text" id="city" required>
+                        <label for="state">State: </label>
+                        <input type="text" id="state" required>
+                        <button type="submit">Find Directions</button>
+                    </div>
                 </fieldset>
             </form>
         
@@ -206,6 +250,54 @@ function displayRandomRestaurant(data) {
     } else {
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
     }
+}
+
+// function loadMap(latLong) {
+//     const baseURL = "https://www.mapquestapi.com/staticmap/v5/map?";
+//     const params = fetchMapParams(latLong);
+//     $('#map').html(`<img src="${baseURL}${params}|circle-sm" alt="map locating restaurant">`);
+// }
+
+// function fetchMapParams(latLong) {
+//     const paramsObject = {
+//         key: 'Nm7BvCgkqE4CwDRloh8s14FNG4NPdjSp',
+//         center: latLong,
+//         zoom: 13,
+//         size: "200,200@2x",
+//         scalebar: true,
+//         locations: latLong
+//     };
+//     const paramsArray = [];
+//     Object.keys(paramsObject).forEach(key => {
+//         paramsArray.push(`${key}=${paramsObject[key]}`)
+//     });
+//     return paramsArray.join('&');
+// }
+
+function loadMap(latLong, title) {
+    const centerCoordinates = latLong.split(",").map(num => parseFloat(num));
+    console.log(centerCoordinates);
+    L.mapquest.key = 'Nm7BvCgkqE4CwDRloh8s14FNG4NPdjSp';
+    const baseLayer = L.mapquest.tileLayer('map');
+
+    let map = L.mapquest.map('map', {
+        center: centerCoordinates,
+        layers: baseLayer,
+        zoom: 15
+    });
+
+    L.control.layers({
+        'Map': baseLayer,
+        'Hybrid': L.mapquest.tileLayer('hybrid'),
+        'Satellite': L.mapquest.tileLayer('satellite'),
+        'Light': L.mapquest.tileLayer('light'),
+        'Dark': L.mapquest.tileLayer('dark')
+      }).addTo(map);
+
+      L.marker(centerCoordinates, {
+        icon: L.mapquest.icons.marker(),
+        draggable: false
+      }).bindPopup(title).addTo(map);
 }
 
 function fetchLatLong(restaurantInfo, restaurantInfoKeys) {
@@ -479,23 +571,3 @@ function fetchRadius() {
 }
 
 $(handleForm);
-
-
-// var myHeaders = new Headers();
-// myHeaders.append("user-key", "802a0f9c5cac8e2659203aefe4f3a1fd");
-
-// var requestOptions = {
-//   method: 'GET',
-//   headers: myHeaders,
-//   redirect: 'follow'
-// };
-
-// fetch("https://developers.zomato.com/api/v2.1/cities?q=Shippensburg", requestOptions)
-//   .then(response => response.json())
-//   .then(result => console.log(result))
-//   .catch(error => console.log('error', error));
-
-// $(fetch("https://www.mapquestapi.com/directions/v2/route?key=Nm7BvCgkqE4CwDRloh8s14FNG4NPdjSp&from=4693 Smith Dr, Bethlehem, PA&to=39.41415307361944,-77.410567890517")
-// .then(response => response.json())
-// .then(result => console.log(result))
-// .catch(error => console.log('error', error)));
