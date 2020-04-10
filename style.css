@@ -103,9 +103,7 @@ button {
     }
 
     .restaurant {
-        align-self: flex-start;
-        padding: 20px;
-        margin: 20px;
+        max-width: 80%;
         display: inline-block;
     }
 

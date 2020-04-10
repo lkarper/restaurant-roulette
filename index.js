@@ -31,42 +31,55 @@ function fetchDirections(latLong) {
 
 function displayDirections(data) {
     console.log(data);
-    const directionsHTMLArray = [];
-    const totalDistance = roundNumber(data.route.distance, 0.25);
-    const totalTime = roundNumber(data.route.realTime / 60, 1);
-    const legs = data.route.legs;
-    for (let leg of legs) {
-        for (let i = 0; i < leg.maneuvers.length; i++) {
-            console.log(leg.maneuvers[i]);
-            if (i < leg.maneuvers.length - 1) {
-                const mapURL = fetchDirectionsStepMapURL(`https${leg.maneuvers[i]["mapUrl"].slice(4)}`);
-                directionsHTMLArray.push(`
-                    <li>
-                        <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
-                        <img src="${mapURL}" alt="route-map-maneuver-${i+1}">
-                        <p>After you travel approximately ${formatDistance(leg.maneuvers[i]["distance"])} and after about ${formatTime(leg.maneuvers[i]["time"])}:</p> 
-                    </li>`);
-            } else {
-                directionsHTMLArray.push(`
-                    <li>
-                        <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
-                        <p>You will have reached your destination.</p> 
-                    </li>`);
+    if (data.info.statuscode !== 0) {
+        $('.directions').html(
+            `<h2>Error:</h2>
+            <p>Unable to find directions from the location you entered.</p>
+            <p>Please check your input for typos and be sure to enter a valid address.</p>`
+        );
+        $(document).ready(() => {
+            $('html, body').animate({
+                scrollTop: $('.directions').offset().top
+            }, 'slow');
+        });
+    } else {
+        const directionsHTMLArray = [];
+        const totalDistance = roundNumber(data.route.distance, 0.25);
+        const totalTime = roundNumber(data.route.realTime / 60, 1);
+        const legs = data.route.legs;
+        for (let leg of legs) {
+            for (let i = 0; i < leg.maneuvers.length; i++) {
+                console.log(leg.maneuvers[i]);
+                if (i < leg.maneuvers.length - 1) {
+                    const mapURL = fetchDirectionsStepMapURL(`https${leg.maneuvers[i]["mapUrl"].slice(4)}`);
+                    directionsHTMLArray.push(`
+                        <li>
+                            <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
+                            <img src="${mapURL}" alt="route-map-maneuver-${i+1}">
+                            <p>After you travel approximately ${formatDistance(leg.maneuvers[i]["distance"])} and after about ${formatTime(leg.maneuvers[i]["time"])}:</p> 
+                        </li>`);
+                } else {
+                    directionsHTMLArray.push(`
+                        <li>
+                            <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
+                            <p>You will have reached your destination.</p> 
+                        </li>`);
+                }
             }
         }
+        $('.directions').html(`
+            <p><b>Length of journey:</b> ${totalDistance} mi.</p>
+            <p><b>Estimated time to reach destination:</b> ${totalTime} min.</p>
+            <ol>
+                ${directionsHTMLArray.join('\r')}
+            </ol>
+            `);
+        $(document).ready(() => {
+            $('html, body').animate({
+                scrollTop: $('.directions').offset().top
+            }, 'slow');
+        });
     }
-    $('.directions').html(`
-        <p><b>Length of journey:</b> ${totalDistance} mi.</p>
-        <p><b>Estimated time to reach destination:</b> ${totalTime} min.</p>
-        <ol>
-            ${directionsHTMLArray.join('\r')}
-        </ol>
-        `);
-    $(document).ready(() => {
-        $('html, body').animate({
-            scrollTop: $('.directions').offset().top
-        }, 'slow');
-    });
 }
 
 function fetchDirectionsStepMapURL(mapBaseURL) {
@@ -144,6 +157,20 @@ function fetchRestaurants() {
         .then(response => {
             if (response.ok) {
                 return response.json();
+            } else if (response.status === 400) {
+                $('.restaurant').html(
+                    `<h2>Error:</h2>
+                    <p>The location "${$('#location').val()}" could not be found.  
+                    Check for typos or alter the format of your query.</p>
+                    <p><b>For example:</b> enter a zipcode (10010) or enter a state following a city (New York, NY).</p>`
+                );
+                $(document).ready(() => {
+                    $('html, body').animate({
+                        scrollTop: $('.restaurant').offset().top
+                    }, 'slow');
+                });
+                console.log(response);
+                throw new Error(response.statusText);
             } else {
                 console.log(response);
                 throw new Error(response.statusText);
@@ -245,7 +272,7 @@ function displayRandomRestaurant(data) {
                         <label for="city">City: </label>
                         <input type="text" id="city" required>
                         <label for="state">State: </label>
-                        <input type="text" id="state" required>
+                        <input type="text" id="state">
                         <button type="submit">Find Directions</button>
                     </div>
                 </fieldset>
@@ -259,18 +286,17 @@ function displayRandomRestaurant(data) {
             event.preventDefault();
             fetchDirections(latLong);
         });
-        $('#display-different-r').on("click", () => {
-            pickRestaurant();
-        });
-        $(document).ready(() => {
-            $('html, body').animate({
-                scrollTop: $('.restaurant').offset().top
-            }, 'slow');
-        });
-
     } else {
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
     }
+    $('#display-different-r').on("click", () => {
+        pickRestaurant();
+    });
+    $(document).ready(() => {
+        $('html, body').animate({
+            scrollTop: $('.restaurant').offset().top
+        }, 'slow');
+    });
 }
 
 function fetchFoodPhotoHTML(restaurantInfo, restaurantInfoKeys) {
