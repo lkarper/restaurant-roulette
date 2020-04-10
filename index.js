@@ -281,7 +281,11 @@ function fetchFoodPhotoHTML(restaurantInfo, restaurantInfoKeys) {
                 photosHTMLArray.push(`<img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo">`);
             }
         }
-        return photosHTMLArray.join('\r');
+        if (photosHTMLArray.length !== 0) {
+            return photosHTMLArray.join('\r');
+        } else {
+            return "<p>Sorry, no photos of food available</p>";
+        }
     } else {
         return "<p>Sorry, no photos of food available</p>";
     }
