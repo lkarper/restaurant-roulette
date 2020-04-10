@@ -20,10 +20,10 @@ fieldset {
     margin: 10px;
 }
 
-
 #location {
     max-width: 350px;
 }
+
 #radius {
     max-width: 40px;
 }
@@ -53,7 +53,7 @@ fieldset {
 }
 
 #map {
-    width: 90%;
+    width: 300px;
     height: 300px;
 }
 
@@ -76,6 +76,23 @@ button {
     align-self: center;
 }
 
+.restaurant {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.restaurant-best-photo {
+    width: auto;
+    height: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.restaurant h2 {
+    text-align: center;
+}
+
 @media screen and (min-width: 750px) {
     form {
         max-width: 80%;
@@ -84,5 +101,21 @@ button {
     .restaurant {
         align-self: flex-start;
         padding: 20px;
+        margin: 20px;
+        display: inline-block;
+    }
+
+    #map {
+        width: 500px;
+        height: 500px;
+    }
+    
+    .restaurant-best-photo {
+        width: auto;
+        height: 400px;
+    }
+    
+    .restaurant h2 {
+        text-align: left;
     }
 }

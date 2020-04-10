@@ -62,6 +62,11 @@ function displayDirections(data) {
             ${directionsHTMLArray.join('\r')}
         </ol>
         `);
+    $(document).ready(() => {
+        $('html, body').animate({
+            scrollTop: $('.directions').offset().top
+        }, 'slow');
+    });
 }
 
 function fetchDirectionsStepMapURL(mapBaseURL) {
@@ -189,8 +194,10 @@ function displayRandomRestaurant(data) {
     const ratingHTML = fetchRestaurantRatingHTML(restaurantInfo, restaurantInfoKeys);
     const hoursHTML = fetchHoursHTML(restaurantInfo, restaurantInfoKeys);
     const attributesHTML = fetchAttributesHTML(restaurantInfo, restaurantInfoKeys);
+    const photoHTML = fetchBestPhotoHTML(restaurantInfo, restaurantInfoKeys);
     $('.restaurant').html(`
         <h2>${name}</h2>
+        ${photoHTML}<br>
         ${urlHTML}
         <p>Phone: ${phoneNumber}</p>
         <p>Address: </p>
@@ -214,9 +221,12 @@ function displayRandomRestaurant(data) {
             <ul>
                 ${attributesHTML}
             </ul>
+        <h2>Not interested in this restaurant?</h2>
+        <p>Click below to fetch a different restaurant using the same search criteria</p>
+        <button type="button" id="display-different-r">Spin again!</button>
     `);
     if (latLong) {
-        loadMap(latLong, name);
+        loadMap(latLong);
         $('.restaurant').append(`
             <form id="directions-form">
                 <fieldset>
@@ -247,8 +257,27 @@ function displayRandomRestaurant(data) {
             event.preventDefault();
             fetchDirections(latLong);
         });
+        $('#display-different-r').on("click", () => {
+            pickRestaurant();
+        });
+        $(document).ready(() => {
+            $('html, body').animate({
+                scrollTop: $('.restaurant').offset().top
+            }, 'slow');
+        });
+
     } else {
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
+    }
+}
+
+function fetchBestPhotoHTML(restaurantInfo, restaurantInfoKeys) {
+    if (restaurantInfoKeys.includes('bestPhoto')) {
+        const prefix = restaurantInfo.bestPhoto.prefix;
+        const suffix = restaurantInfo.bestPhoto.suffix;
+        return `<img src="${prefix}original${suffix}" alt="restaurant photo" class="restaurant-best-photo">`;
+    } else {
+        return "<p>Sorry, no image available for this restaurant</p>";
     }
 }
 
@@ -274,30 +303,23 @@ function displayRandomRestaurant(data) {
 //     return paramsArray.join('&');
 // }
 
-function loadMap(latLong, title) {
-    const centerCoordinates = latLong.split(",").map(num => parseFloat(num));
+function loadMap(latLong) {
+    const centerCoordinates = latLong.split(",").map(num => parseFloat(num)).reverse();
     console.log(centerCoordinates);
-    L.mapquest.key = 'Nm7BvCgkqE4CwDRloh8s14FNG4NPdjSp';
-    const baseLayer = L.mapquest.tileLayer('map');
+    mapboxgl.accessToken = 'pk.eyJ1IjoibGthcnBlciIsImEiOiJjazh1NzRhZzMwN3hwM2VwNG0xZnM3c2JqIn0.dD8wiLFpEkdBZOdZt7N6VA';
 
-    let map = L.mapquest.map('map', {
+    let map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
         center: centerCoordinates,
-        layers: baseLayer,
         zoom: 15
     });
 
-    L.control.layers({
-        'Map': baseLayer,
-        'Hybrid': L.mapquest.tileLayer('hybrid'),
-        'Satellite': L.mapquest.tileLayer('satellite'),
-        'Light': L.mapquest.tileLayer('light'),
-        'Dark': L.mapquest.tileLayer('dark')
-      }).addTo(map);
+    map.addControl(new mapboxgl.NavigationControl());
 
-      L.marker(centerCoordinates, {
-        icon: L.mapquest.icons.marker(),
-        draggable: false
-      }).bindPopup(title).addTo(map);
+    const marker = new mapboxgl.Marker()
+        .setLngLat(centerCoordinates)
+        .addTo(map);
 }
 
 function fetchLatLong(restaurantInfo, restaurantInfoKeys) {
@@ -340,7 +362,11 @@ function fetchAttributesHTML(restaurantInfo, restaurantInfoKeys) {
             const attributesHTMLArray = [];
             for (let attributeObject of restaurantInfo.attributes.groups) {
                 for (let item of attributeObject.items) {
-                    attributesHTMLArray.push(`<li>${item.displayName}: ${item.displayValue}</li>`);
+                    if (item.displayName === item.displayValue) {
+                        attributesHTMLArray.push(`<li>${item.displayName}</li>`);    
+                    } else {
+                        attributesHTMLArray.push(`<li>${item.displayName}: ${item.displayValue}</li>`);
+                    }
                 }
             }
             return attributesHTMLArray.join('\r');
@@ -362,11 +388,7 @@ function fetchHoursHTML(restaurantInfo, restaurantInfoKeys) {
                 for (let time of object.open) {
                     timesArray.push(time.renderedTime);
                 }
-                hoursHTMLArray.push(
-                    `
-                    <li>${object.days}: ${timesArray.join(', ')}</li>
-                    `
-                );
+                hoursHTMLArray.push(`<li>${object.days}: ${timesArray.join(', ')}</li>`);
             }
             return hoursHTMLArray.join('\r');
         }
@@ -381,9 +403,9 @@ function fetchHoursHTML(restaurantInfo, restaurantInfoKeys) {
 function fetchMenuHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('hasMenu')) {
         if (restaurantInfo.hasMenu) {
-            return `<a href="${restaurantInfo.menu.url}" target="_blank">View Menu on Foursquare</a>`
+            return `<a href="${restaurantInfo.menu.url}" target="_blank">View Menu on Foursquare</a>`;
         } else {
-            return "<p>Menu not available.</p>"
+            return "<p>Menu not available.</p>";
         }
     } else {
         return "<p>Menu not available.</p>";
@@ -392,7 +414,7 @@ function fetchMenuHTML(restaurantInfo, restaurantInfoKeys) {
 
 function fetchRestaurantRatingHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('rating')) {
-        return `<p>Rating: ${restaurantInfo.rating}</p>`
+        return `<p>Rating: ${restaurantInfo.rating}</p>`;
     } else {
         return "<p>Rating not available</p>";
     }
@@ -423,7 +445,7 @@ function fetchCategoriesHTML(restaurantInfo, restaurantInfoKeys) {
         }
         return categoriesHTMLArray.join('\r');
     } else {
-        return "<li>Sorry, no categories available</li>"
+        return "<li>Sorry, no categories available</li>";
     }
 }
 
@@ -437,7 +459,7 @@ function fetchRestaurantAddressHTML(restaurantInfo, restaurantInfoKeys) {
             return addressHTMLArray.join('\r');
         }
         catch (e) {
-            return "<p>Address not available.</p>"
+            return "<p>Address not available.</p>";
         }
     } else {
         return "<p>Address not available.</p>";
