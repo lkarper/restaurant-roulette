@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Roulette</title>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet">      
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <h1>Restaurant Roulette</h1>
     </header>
     <main>
+        <p>Are you hungry, but can't decide where to eat? Are you planning a meal with one or more companions and no one
+            can agree on a destination? <em>Restaurant Roulette</em> is here to help! Just enter some basic information below and
+            spin the food wheel to find a random restaurant that meets your needs!</p>
         <form id="restaurant-form">
             <fieldset>
                 <legend>Please enter some basic information about where you'd like to eat</legend>
@@ -24,7 +29,8 @@
                 </div>
             </fieldset>
             <fieldset id="categories">
-                <legend>You don't have to, but if you'd like, choose one or more categories to include in your search</legend>
+                <legend>You don't have to, but if you'd like, choose one or more categories to include in your search
+                </legend>
                 <div class="categories-container">
                     <label for="African">
                         <input type="checkbox" value="4bf58dd8d48988d1c8941735" id="African" name="African">
@@ -62,7 +68,7 @@
                         <input type="checkbox" value="52e81612bcbc57f1066b79f4" id="Buffet" name="Buffet">
                         Buffet
                     </label>
-                    
+
                     <label for="Burgers">
                         <input type="checkbox" value="4bf58dd8d48988d16c941735" id="Burgers" name="Burgers">
                         Burgers
@@ -119,9 +125,9 @@
                         <input type="checkbox" value="4bf58dd8d48988d110941735" id="Italian" name="Italian">
                         Italian
                     </label>
-                    
                     <label for="Latin-American">
-                        <input type="checkbox" value="4bf58dd8d48988d1be941735" id="Latin-American" name="Latin-American">
+                        <input type="checkbox" value="4bf58dd8d48988d1be941735" id="Latin-American"
+                            name="Latin-American">
                         Latin American
                     </label>
                     <label for="Mexican">
@@ -129,7 +135,8 @@
                         Mexican
                     </label>
                     <label for="Middle-Eastern">
-                        <input type="checkbox" value="4bf58dd8d48988d115941735" id="Middle-Eastern" name="Middle-Eastern">
+                        <input type="checkbox" value="4bf58dd8d48988d115941735" id="Middle-Eastern"
+                            name="Middle-Eastern">
                         Middle Eastern
                     </label>
                     <label for="Pizza">
@@ -157,7 +164,8 @@
                         Steakhouse
                     </label>
                     <label for="Vegetarian-Vegan">
-                        <input type="checkbox" value="4bf58dd8d48988d1d3941735" id="Vegetarian-Vegan" name="Vegetarian-Vegan">
+                        <input type="checkbox" value="4bf58dd8d48988d1d3941735" id="Vegetarian-Vegan"
+                            name="Vegetarian-Vegan">
                         Vegetarian / Vegan
                     </label>
                     <label for="Wings">
@@ -196,8 +204,8 @@
     </main>
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"
-    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-    <script src="categories.js"></script>
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="index.js"></script>
 </body>
+
 </html>

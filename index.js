@@ -278,7 +278,7 @@ function fetchFoodPhotoHTML(restaurantInfo, restaurantInfoKeys) {
         const photosHTMLArray = [];
         for (let group of restaurantInfo.photos.groups) {
             if (group.items.length > 1) {
-                photosHTMLArray.push(`<img src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo">`);
+                photosHTMLArray.push(`<img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo">`);
             }
         }
         return photosHTMLArray.join('\r');
