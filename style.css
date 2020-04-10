@@ -82,7 +82,7 @@ button {
     flex-direction: column;
 }
 
-.restaurant-best-photo {
+.restaurant img {
     width: auto;
     height: 200px;
     margin-left: auto;
@@ -110,7 +110,7 @@ button {
         height: 500px;
     }
     
-    .restaurant-best-photo {
+    .restaurant img {
         width: auto;
         height: 400px;
     }

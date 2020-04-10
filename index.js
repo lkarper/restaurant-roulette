@@ -194,10 +194,11 @@ function displayRandomRestaurant(data) {
     const ratingHTML = fetchRestaurantRatingHTML(restaurantInfo, restaurantInfoKeys);
     const hoursHTML = fetchHoursHTML(restaurantInfo, restaurantInfoKeys);
     const attributesHTML = fetchAttributesHTML(restaurantInfo, restaurantInfoKeys);
-    const photoHTML = fetchBestPhotoHTML(restaurantInfo, restaurantInfoKeys);
+    const bestPhotoHTML = fetchBestPhotoHTML(restaurantInfo, restaurantInfoKeys);
+    const foodPhotoHTML = fetchFoodPhotoHTML(restaurantInfo, restaurantInfoKeys);
     $('.restaurant').html(`
         <h2>${name}</h2>
-        ${photoHTML}<br>
+        ${bestPhotoHTML}<br>
         ${urlHTML}
         <p>Phone: ${phoneNumber}</p>
         <p>Address: </p>
@@ -210,6 +211,7 @@ function displayRandomRestaurant(data) {
             <ul>
                 ${categoriesHTML}
             </ul>
+        ${foodPhotoHTML}
         ${priceHTML}
         ${menuHTML}
         ${ratingHTML}
@@ -268,6 +270,20 @@ function displayRandomRestaurant(data) {
 
     } else {
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
+    }
+}
+
+function fetchFoodPhotoHTML(restaurantInfo, restaurantInfoKeys) {
+    if (restaurantInfoKeys.includes('photos')) {
+        const photosHTMLArray = [];
+        for (let group of restaurantInfo.photos.groups) {
+            if (group.items.length > 1) {
+                photosHTMLArray.push(`<img src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo">`);
+            }
+        }
+        return photosHTMLArray.join('\r');
+    } else {
+        return "<p>Sorry, no photos of food available</p>";
     }
 }
 
