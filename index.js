@@ -2,6 +2,8 @@ const restaurantQueryResults = [];
 let totalRestaurantsFound = 0;
 let currentOffset = 0;
 let queryCounter = 0;
+let currentRadius = 0;
+let currentDistance = 0;
 
 function handleForm() {
     $('#restaurant-form').submit(event => {
@@ -9,6 +11,7 @@ function handleForm() {
         restaurantQueryResults.splice(0, restaurantQueryResults.length);
         currentOffset = 0;
         queryCounter = 0;
+        $('.restaurant').empty();
         fetchRestaurants();
     });
 }
@@ -140,14 +143,22 @@ function getDirectionsParams(latLong) {
 }
 
 function fetchRouteType() {
-    return $('#mode').val();
+    if ($('#mode').val()) {
+        return $('#mode').val();
+    } else {
+        return "fastest";
+    }
 }
 
 function fetchDeparturePoint() {
-    const street = $('#street').val();
-    const city = $('#city').val();
-    const state = $('#state').val();
-    return `${street}, ${city}, ${state}`;
+    if ($('#street').val()) {
+        const street = $('#street').val();
+        const city = $('#city').val();
+        const state = $('#state').val();
+        return `${street}, ${city}, ${state}`;
+    } else {
+        return $('#location').val();
+    }
 }
 
 function fetchRestaurants() {
@@ -290,6 +301,8 @@ function displayRandomRestaurant(data) {
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
     }
     $('#display-different-r').on("click", () => {
+        $('#directions-form').remove();
+        $('.directions').remove();
         pickRestaurant();
     });
     $(document).ready(() => {
@@ -513,10 +526,44 @@ function fetchRestaurantAddressHTML(restaurantInfo, restaurantInfoKeys) {
 }
 
 function pickRestaurant() {
-    const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
-    const randomRestaurant = restaurantQueryResults[randomNum];
-    console.log(randomRestaurant);
-    fetchRestaurantDetails(randomRestaurant.venue.id);
+    if (restaurantQueryResults.length === 0) {
+        $('.restaurant').html("<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>")
+    } else {
+        const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
+        const randomRestaurant = restaurantQueryResults[randomNum];
+        console.log(randomRestaurant);
+        fetchDistance(`${randomRestaurant.venue.location.lat},${randomRestaurant.venue.location.lng}`, randomNum);
+    }
+}
+
+function fetchDistance(latLong, randomNum) {
+    const baseURL = "https://www.mapquestapi.com/directions/v2/route?";
+    const params = getDirectionsParams(latLong);
+    fetch(`${baseURL}${params}`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.log(response);
+                throw new Error(response.statusText);
+            }
+        })
+        .then(responseJson => {
+            console.log(responseJson, "fetchDistance results")
+            setAndCheckCurrentDistance(responseJson, randomNum)})
+        .catch(error => console.log("error", error));
+}
+
+function setAndCheckCurrentDistance(data, randomNum) {
+    console.log("setting current distance");
+    currentDistance = data.route.distance;
+    console.log(currentDistance, currentRadius)
+    if (currentDistance > currentRadius) {
+        restaurantQueryResults.splice(randomNum, 1);
+        pickRestaurant();
+    } else {
+        fetchRestaurantDetails(restaurantQueryResults[randomNum].venue.id);
+    }
 }
 
 function fetchRestaurantDetails(id) {
@@ -635,6 +682,7 @@ function fetchCategories() {
 
 function fetchRadius() {
     const distance = $('#radius').val();
+    currentRadius = parseInt(distance);
     return distance * 1609;
 }
 
