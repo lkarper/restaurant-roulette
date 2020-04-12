@@ -4,6 +4,7 @@ let currentOffset = 0;
 let queryCounter = 0;
 let currentRadius = 0;
 let currentDistance = 0;
+let splicedQueryResults = false;
 
 function handleForm() {
     $('#restaurant-form').submit(event => {
@@ -11,7 +12,9 @@ function handleForm() {
         restaurantQueryResults.splice(0, restaurantQueryResults.length);
         currentOffset = 0;
         queryCounter = 0;
+        splicedQueryResults = false;
         $('.restaurant').empty();
+        $('.utensils').toggleClass('hidden');
         fetchRestaurants();
     });
 }
@@ -33,6 +36,7 @@ function fetchDirections(latLong) {
 }
 
 function displayDirections(data) {
+    $('.wheel').toggleClass('hidden');
     console.log(data);
     if (data.info.statuscode !== 0) {
         $('.directions').html(
@@ -169,6 +173,7 @@ function fetchRestaurants() {
             if (response.ok) {
                 return response.json();
             } else if (response.status === 400) {
+                $('.utensils').toggleClass('hidden');
                 $('.restaurant').html(
                     `<h2>Error:</h2>
                     <p>The location "${$('#location').val()}" could not be found.  
@@ -199,8 +204,10 @@ function loadRestaurants(data) {
     const responseGroupsArray = data.response.groups;
     for (let responseGroup of responseGroupsArray) {
         if (totalRestaurantsFound === 0) {
+            $('.utensils').toggleClass('hidden');
             $('.restaurant').html("<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>")
         } else if (queryCounter === 10 && restaurantQueryResults.length === 0) {
+            $('.utensils').toggleClass('hidden');
             $('.restaurant').html("<p>Sorry, looks like something went wrong.  Try again with different parameters.</p>")
         } else if (queryCounter === 10 && restaurantQueryResults.length !== 0) {
             pickRestaurant();
@@ -218,6 +225,9 @@ function loadRestaurants(data) {
 }
 
 function displayRandomRestaurant(data) {
+    if (!$('.utensils').hasClass('hidden')) {
+        $('.utensils').toggleClass('hidden');
+    }
     console.log(data);
     const restaurantInfo = data.response.venue;
     const restaurantInfoKeys = Object.keys(restaurantInfo);
@@ -295,6 +305,7 @@ function displayRandomRestaurant(data) {
         `);
         $('#directions-form').submit(event => {
             event.preventDefault();
+            $('.wheel').toggleClass('hidden');
             fetchDirections(latLong);
         });
     } else {
@@ -303,6 +314,8 @@ function displayRandomRestaurant(data) {
     $('#display-different-r').on("click", () => {
         $('#directions-form').remove();
         $('.directions').remove();
+        $('.restaurant').empty();
+        $('.utensils').toggleClass('hidden');
         pickRestaurant();
     });
     $(document).ready(() => {
@@ -526,7 +539,8 @@ function fetchRestaurantAddressHTML(restaurantInfo, restaurantInfoKeys) {
 }
 
 function pickRestaurant() {
-    if (restaurantQueryResults.length === 0) {
+    if (restaurantQueryResults.length === 0 && splicedQueryResults) {
+        $('.utensils').toggleClass('hidden');
         $('.restaurant').html("<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>")
     } else {
         const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
@@ -560,6 +574,7 @@ function setAndCheckCurrentDistance(data, randomNum) {
     console.log(currentDistance, currentRadius)
     if (currentDistance > currentRadius) {
         restaurantQueryResults.splice(randomNum, 1);
+        splicedQueryResults = true;
         pickRestaurant();
     } else {
         fetchRestaurantDetails(restaurantQueryResults[randomNum].venue.id);

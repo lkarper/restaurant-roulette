@@ -2,6 +2,20 @@
     box-sizing: border-box;
 }
 
+body {
+    margin-bottom: 100px;
+}
+
+.hidden {
+    display: none;
+}
+
+.utensils, .wheel {
+    font-size: 60px;
+    margin: 20px;
+}
+
+
 header {
     text-align: center;
 }
