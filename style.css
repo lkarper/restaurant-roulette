@@ -98,6 +98,7 @@ button {
 
 .restaurant-best-photo, .food-photo {
     width: auto;
+    max-width: 90%;
     height: 200px;
     margin-left: auto;
     margin-right: auto;
