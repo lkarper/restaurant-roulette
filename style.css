@@ -2,8 +2,25 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
-    margin-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    flex-shrink: 0;
+    width: 100%;
+    margin-top: 100px;
+}
+
+footer p {
+    width: 100%;
+    max-width: 100%;
+    font-size: 12px;
 }
 
 .hidden {
@@ -23,6 +40,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex: 1 0 auto;
 }
 
 legend {
@@ -109,6 +127,24 @@ button {
 
 .restaurant h2 {
     text-align: center;
+}
+
+.powered-by-Foursquare {
+    display: inline-block;
+}
+
+#restaurant-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.spin {
+    max-width: 180px;
+}
+
+.powered-by-Foursquare {
+    height: auto;
+    max-width: 180px;
 }
 
 @media screen and (min-width: 750px) {

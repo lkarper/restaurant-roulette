@@ -18,15 +18,16 @@
     </header>
     <main>
         <p>Are you hungry, but can't decide where to eat? Are you planning a meal with one or more companions and no one
-            can agree on a destination? <em>Restaurant Roulette</em> is here to help! Just enter some basic information below and
-            spin the restaurant wheel to find a random restaurant that meets your needs!</p>
+            can agree on a destination? <em>Restaurant Roulette</em> is here to help! Just enter some basic information
+            below and spin the restaurant wheel to find a random restaurant that meets your needs!</p>
         <form id="restaurant-form">
             <fieldset>
                 <legend>Please enter some basic information about where you'd like to eat</legend>
                 <div id="location-info">
                     <label for="location">Where would you like to eat?</label>
                     <input type="text" id="location" placeholder="e.g. New York, NY; 10010" required>
-                    <label for="radius">How many miles are you willing to travel from this location? (Max: 60 mi.)</label>
+                    <label for="radius">How many miles are you willing to travel from this location? (Max: 60
+                        mi.)</label>
                     <input type="number" id="radius" min="1" max="60" required>
                 </div>
             </fieldset>
@@ -197,12 +198,18 @@
                 </div>
             </fieldset>
             <button type="submit" class="spin">Spin that restaurant wheel!</button>
+            <img src="images/powered-by-Foursquare.png" alt="Powered by Foursquare logo" class="powered-by-Foursquare">
         </form>
         <i class="fas fa-spin fa-utensils hidden utensils"></i>
         <section class="restaurant hidden">
         </section>
         <i class="fad fa-spin fa-steering-wheel hidden wheel"></i>
     </main>
+    <footer>
+        <p>This [application/service] uses the Foursquare® application programming interface but is not endorsed or
+            certified by Foursquare Labs, Inc. All of the Foursquare® logos (including all badges) and trademarks
+            displayed on this [application/service] are the property of Foursquare Labs, Inc.</p>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>

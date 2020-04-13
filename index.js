@@ -389,7 +389,7 @@ function fetchLatLong(restaurantInfo, restaurantInfoKeys) {
 
 function fetchURLHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('canonicalUrl')) {
-        return `<a href="${restaurantInfo.canonicalUrl}" target="_blank">View Restaurant on Foursquare</a>`;
+        return `<a href="${restaurantInfo.canonicalUrl}?ref=4MRDI4UFA2MFILISD0LH1WB2WZWQVP42WUECJQQ44HFPZUPV" target="_blank">View Restaurant on Foursquare</a>`;
     } else {
         return "<p>Restaurant url not available.</p>";
     }
@@ -456,7 +456,7 @@ function fetchHoursHTML(restaurantInfo, restaurantInfoKeys) {
 function fetchMenuHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('hasMenu')) {
         if (restaurantInfo.hasMenu) {
-            return `<a href="${restaurantInfo.menu.url}" target="_blank">View Menu on Foursquare</a>`;
+            return `<a href="${restaurantInfo.menu.url}?ref=4MRDI4UFA2MFILISD0LH1WB2WZWQVP42WUECJQQ44HFPZUPV" target="_blank">View Menu on Foursquare</a>`;
         } else {
             return "<p>Menu not available.</p>";
         }
