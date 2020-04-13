@@ -1,4 +1,5 @@
 const restaurantQueryResults = [];
+const currentCategories = [];
 let totalRestaurantsFound = 0;
 let currentOffset = 0;
 let queryCounter = 0;
@@ -10,6 +11,7 @@ function handleForm() {
     $('#restaurant-form').submit(event => {
         event.preventDefault();
         restaurantQueryResults.splice(0, restaurantQueryResults.length);
+        currentCategories.splice(0, currentCategories.length);
         currentOffset = 0;
         queryCounter = 0;
         splicedQueryResults = false;
@@ -525,8 +527,28 @@ function pickRestaurant() {
         const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
         const randomRestaurant = restaurantQueryResults[randomNum];
         console.log(randomRestaurant);
-        fetchDistance(`${randomRestaurant.venue.location.lat},${randomRestaurant.venue.location.lng}`, randomNum);
+        if (checkCategories(restaurantQueryResults[randomNum].venue.categories)) {
+            fetchDistance(`${randomRestaurant.venue.location.lat},${randomRestaurant.venue.location.lng}`, randomNum);
+        } else {
+            console.log("false category removed");
+            restaurantQueryResults.splice(restaurantQueryResults[randomNum], 1);
+            splicedQueryResults = true;
+            pickRestaurant();
+        }
     }
+}
+
+function checkCategories(categoriesArray) {
+    for (let category of currentCategories) {
+        for (let queriedCategory of categoriesArray) {
+            if (category === queriedCategory.id) {
+                return true;
+            } else {
+                continue;
+            }
+        }
+    }
+    return false;
 }
 
 function fetchDistance(latLong, randomNum) {
@@ -670,6 +692,7 @@ function fetchCategories() {
     if (clickedCategories.length === 0) {
         return "4bf58dd8d48988d1c4941735";
     } else {
+        currentCategories.push(...clickedCategories);
         return clickedCategories.join(',');
     }
 }
