@@ -15,7 +15,6 @@ body {
     margin: 20px;
 }
 
-
 header {
     text-align: center;
 }
@@ -102,6 +101,10 @@ button {
     height: 200px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.address-list {
+    list-style: none;
 }
 
 .restaurant h2 {

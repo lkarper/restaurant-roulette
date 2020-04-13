@@ -14,6 +14,9 @@ function handleForm() {
         queryCounter = 0;
         splicedQueryResults = false;
         $('.restaurant').empty();
+        if ($('.restaurant').hasClass('hidden')) {
+            $('.restaurant').toggleClass('hidden');
+        }
         $('.utensils').toggleClass('hidden');
         fetchRestaurants();
     });
@@ -248,26 +251,27 @@ function displayRandomRestaurant(data) {
         <h2>${name}</h2>
         ${bestPhotoHTML}<br>
         ${urlHTML}
-        <p>Phone: ${phoneNumber}</p>
-        <p>Address: </p>
-            <ul>
+        <p><b>Phone:</b> ${phoneNumber}</p>
+        <h3>Address: </h3>
+            <ul class="address-list">
                 ${addressHTML}
             </ul>
         <div id="map">
         </div>
-        <p>Categories: </p>
+        <h3>Categories: </h3>
             <ul>
                 ${categoriesHTML}
             </ul>
         ${foodPhotoHTML}
+        <h3>Price, Menu, and Rating Info: </h3>
         ${priceHTML}
         ${menuHTML}
         ${ratingHTML}
-        <p>Hours: </p>
+        <h3>Hours: </h3>
             <ul>
                 ${hoursHTML}
             </ul>
-        <p>More about this restaurant: </p>
+        <h3>More about this restaurant: </h3>
             <ul>
                 ${attributesHTML}
             </ul>
@@ -276,38 +280,7 @@ function displayRandomRestaurant(data) {
         <button type="button" id="display-different-r">Spin again!</button>
     `);
     if (latLong) {
-        loadMap(latLong);
-        $('.restaurant').append(`
-            <form id="directions-form">
-                <fieldset>
-                    <legend>If you'd like directions, please provide an address for the point of departure</legend>
-                    <div class="departure-container">
-                        <label for="mode">Mode of travel: </label>
-                        <select id="mode">
-                            <option value="fastest">Driving</option>
-                            <option value="pedestrian">Walking</option>
-                            <option value="bicycle">Cycling</option>
-                        </select>
-                        <label for="street">Street: </label>
-                        <input type="text" id="street" required>
-                        <label for="city">City: </label>
-                        <input type="text" id="city" required>
-                        <label for="state">State: </label>
-                        <input type="text" id="state">
-                        <button type="submit">Find Directions</button>
-                    </div>
-                </fieldset>
-            </form>
-        
-            <div class="directions">
-        
-            </div>
-        `);
-        $('#directions-form').submit(event => {
-            event.preventDefault();
-            $('.wheel').toggleClass('hidden');
-            fetchDirections(latLong);
-        });
+        fetchMap(latLong);
     } else {
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
     }
@@ -325,6 +298,39 @@ function displayRandomRestaurant(data) {
     });
 }
 
+function fetchMap(latLong) {
+    loadMap(latLong);
+    $('.restaurant').append(`
+        <form id="directions-form">
+            <fieldset>
+                <legend>If you'd like directions, please provide an address for the point of departure</legend>
+                <div class="departure-container">
+                    <label for="mode">Mode of travel: </label>
+                    <select id="mode">
+                        <option value="fastest">Driving</option>
+                        <option value="pedestrian">Walking</option>
+                        <option value="bicycle">Cycling</option>
+                    </select>
+                    <label for="street">Street: </label>
+                    <input type="text" id="street" name="street" required>
+                    <label for="city">City: </label>
+                    <input type="text" id="city" name="city" required>
+                    <label for="state">State: </label>
+                    <input type="text" id="state" name="state">
+                    <button type="submit">Find Directions</button>
+                </div>
+            </fieldset>
+        </form>
+    `);
+    $('#directions-form').submit(event => {
+        event.preventDefault();
+        $('.wheel').toggleClass('hidden');
+        $('.directions').remove();
+        $('.restaurant').append('<div class="directions"></div>');
+        fetchDirections(latLong);
+    });
+}
+
 function fetchFoodPhotoHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('photos')) {
         const photosHTMLArray = [];
@@ -336,10 +342,10 @@ function fetchFoodPhotoHTML(restaurantInfo, restaurantInfoKeys) {
         if (photosHTMLArray.length !== 0) {
             return photosHTMLArray.join('\r');
         } else {
-            return "<p>Sorry, no photos of food available</p>";
+            return "<p>Sorry, no photos of food available.</p>";
         }
     } else {
-        return "<p>Sorry, no photos of food available</p>";
+        return "<p>Sorry, no photos of food available.</p>";
     }
 }
 
@@ -349,46 +355,21 @@ function fetchBestPhotoHTML(restaurantInfo, restaurantInfoKeys) {
         const suffix = restaurantInfo.bestPhoto.suffix;
         return `<img src="${prefix}original${suffix}" alt="restaurant photo" class="restaurant-best-photo">`;
     } else {
-        return "<p>Sorry, no image available for this restaurant</p>";
+        return "<p>Sorry, no image available for this restaurant.</p>";
     }
 }
-
-// function loadMap(latLong) {
-//     const baseURL = "https://www.mapquestapi.com/staticmap/v5/map?";
-//     const params = fetchMapParams(latLong);
-//     $('#map').html(`<img src="${baseURL}${params}|circle-sm" alt="map locating restaurant">`);
-// }
-
-// function fetchMapParams(latLong) {
-//     const paramsObject = {
-//         key: 'Nm7BvCgkqE4CwDRloh8s14FNG4NPdjSp',
-//         center: latLong,
-//         zoom: 13,
-//         size: "200,200@2x",
-//         scalebar: true,
-//         locations: latLong
-//     };
-//     const paramsArray = [];
-//     Object.keys(paramsObject).forEach(key => {
-//         paramsArray.push(`${key}=${paramsObject[key]}`)
-//     });
-//     return paramsArray.join('&');
-// }
 
 function loadMap(latLong) {
     const centerCoordinates = latLong.split(",").map(num => parseFloat(num)).reverse();
     console.log(centerCoordinates);
     mapboxgl.accessToken = 'pk.eyJ1IjoibGthcnBlciIsImEiOiJjazh1NzRhZzMwN3hwM2VwNG0xZnM3c2JqIn0.dD8wiLFpEkdBZOdZt7N6VA';
-
     let map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
         center: centerCoordinates,
         zoom: 15
     });
-
     map.addControl(new mapboxgl.NavigationControl());
-
     const marker = new mapboxgl.Marker()
         .setLngLat(centerCoordinates)
         .addTo(map);
@@ -404,12 +385,11 @@ function fetchLatLong(restaurantInfo, restaurantInfoKeys) {
     }
 }
 
-
 function fetchURLHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('canonicalUrl')) {
         return `<a href="${restaurantInfo.canonicalUrl}" target="_blank">View Restaurant on Foursquare</a>`;
     } else {
-        return "<p>Restaurant url not available</p>";
+        return "<p>Restaurant url not available.</p>";
     }
 }
 
@@ -422,7 +402,6 @@ function fetchPhoneNumber(restaurantInfo, restaurantInfoKeys) {
         } else {
             return "Phone number not available.";
         }
-
     } else {
         return "Phone number not available.";
     }
@@ -465,10 +444,10 @@ function fetchHoursHTML(restaurantInfo, restaurantInfoKeys) {
             return hoursHTMLArray.join('\r');
         }
         catch(e) {
-            return "<li>Sorry, hours not available.</li>"
+            return "<li>Sorry, hours not available</li>"
         }
     } else {
-        return "<li>Sorry, hours not available.</li>"
+        return "<li>Sorry, hours not available</li>"
     }
 }
 
@@ -486,7 +465,7 @@ function fetchMenuHTML(restaurantInfo, restaurantInfoKeys) {
 
 function fetchRestaurantRatingHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('rating')) {
-        return `<p>Rating: ${restaurantInfo.rating}</p>`;
+        return `<p><b>Rating:</b> ${restaurantInfo.rating}</p>`;
     } else {
         return "<p>Rating not available</p>";
     }
@@ -496,13 +475,13 @@ function fetchPriceHTML(restaurantInfo, restaurantInfoKeys) {
     if (restaurantInfoKeys.includes('price')) {
         switch (restaurantInfo.price.tier) {
             case 1:
-                return "<p>The average price per entree is less than $10</p>";
+                return "<p>The average price per entree is less than $10.</p>";
             case 2:
-                return "<p>The average price per entree is $10-$20</p>";
+                return "<p>The average price per entree is $10-$20.</p>";
             case 3:
-                return "<p>The average price per entree is $20-$30</p>";
+                return "<p>The average price per entree is $20-$30.</p>";
             case 4:
-                return "<p>The average price per entree is more than $30</p>";
+                return "<p>The average price per entree is more than $30.</p>";
         }
     } else {
         return "<p>Sorry, no info available on pricing</p>";
@@ -531,10 +510,10 @@ function fetchRestaurantAddressHTML(restaurantInfo, restaurantInfoKeys) {
             return addressHTMLArray.join('\r');
         }
         catch (e) {
-            return "<p>Address not available.</p>";
+            return "<p>Address not available</p>";
         }
     } else {
-        return "<p>Address not available.</p>";
+        return "<p>Address not available</p>";
     }
 }
 

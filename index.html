@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Roulette</title>
+    <title>Restaurant Roulette - Can't decide where to eat? Spin the Restaurant Wheel!</title>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+    <meta name="description" content="A web app the helps users find a random restaurant that meets their needs">
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
     <link rel="stylesheet" href="style.css">
@@ -18,7 +19,7 @@
     <main>
         <p>Are you hungry, but can't decide where to eat? Are you planning a meal with one or more companions and no one
             can agree on a destination? <em>Restaurant Roulette</em> is here to help! Just enter some basic information below and
-            spin the food wheel to find a random restaurant that meets your needs!</p>
+            spin the restaurant wheel to find a random restaurant that meets your needs!</p>
         <form id="restaurant-form">
             <fieldset>
                 <legend>Please enter some basic information about where you'd like to eat</legend>
@@ -69,13 +70,12 @@
                         <input type="checkbox" value="52e81612bcbc57f1066b79f4" id="Buffet" name="Buffet">
                         Buffet
                     </label>
-
                     <label for="Burgers">
                         <input type="checkbox" value="4bf58dd8d48988d16c941735" id="Burgers" name="Burgers">
                         Burgers
                     </label>
-                    <label for="Café">
-                        <input type="checkbox" value="4bf58dd8d48988d16d941735" id="Café" name="Café">
+                    <label for="Cafe">
+                        <input type="checkbox" value="4bf58dd8d48988d16d941735" id="Cafe" name="Cafe">
                         Café
                     </label>
                     <label for="Coffee-Shop">
@@ -154,7 +154,7 @@
                     </label>
                     <label for="Sandwiches">
                         <input type="checkbox" value="4bf58dd8d48988d1c5941735" id="Sandwiches" name="Sandwiches">
-                        Sandwichs
+                        Sandwiches
                     </label>
                     <label for="Seafood">
                         <input type="checkbox" value="4bf58dd8d48988d1ce941735" id="Seafood" name="Seafood">
@@ -199,7 +199,7 @@
             <button type="submit" class="spin">Spin that restaurant wheel!</button>
         </form>
         <i class="fas fa-spin fa-utensils hidden utensils"></i>
-        <section class="restaurant">
+        <section class="restaurant hidden">
         </section>
         <i class="fad fa-spin fa-steering-wheel hidden wheel"></i>
     </main>
