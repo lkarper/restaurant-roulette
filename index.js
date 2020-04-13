@@ -56,6 +56,9 @@ function displayDirections(data) {
         });
     } else {
         const directionsHTMLArray = [];
+        const copyrightText = "© 2019 MapQuest, Inc.";
+        const logoURL = "https://api.mqcdn.com/res/mqlogo.gif";
+        const imageAltText = "© 2019 MapQuest, Inc.";
         const totalDistance = roundNumber(data.route.distance, 0.25);
         const totalTime = roundNumber(data.route.realTime / 60, 1);
         const legs = data.route.legs;
@@ -80,11 +83,15 @@ function displayDirections(data) {
             }
         }
         $('.directions').html(`
+            <p><img src="${logoURL}" alt="${imageAltText}"> ${copyrightText}</p>
             <p><b>Length of journey:</b> ${totalDistance} mi.</p>
             <p><b>Estimated time to reach destination:</b> ${totalTime} min.</p>
             <ol>
                 ${directionsHTMLArray.join('\r')}
             </ol>
+            <p>Use of directions and maps is subject to the <a href="http://hello.mapquest.com/terms-of-use/" target="_blank">MapQuest Terms of Use</a>. 
+            We make no guarantee of the accuracy of their content, road conditions or route usability. 
+            You assume all risk of use.</p>
             `);
         $(document).ready(() => {
             $('html, body').animate({
