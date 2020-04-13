@@ -530,8 +530,8 @@ function pickRestaurant() {
         if (checkCategories(restaurantQueryResults[randomNum].venue.categories)) {
             fetchDistance(`${randomRestaurant.venue.location.lat},${randomRestaurant.venue.location.lng}`, randomNum);
         } else {
-            console.log("false category removed");
-            restaurantQueryResults.splice(restaurantQueryResults[randomNum], 1);
+            console.log("false category removed", restaurantQueryResults[randomNum]);
+            restaurantQueryResults.splice(randomNum, 1);
             splicedQueryResults = true;
             pickRestaurant();
         }
@@ -579,6 +579,7 @@ function setAndCheckCurrentDistance(data, randomNum) {
     currentDistance = data.route.distance;
     console.log(currentDistance, currentRadius)
     if (currentDistance > currentRadius) {
+        console.log("splicing too far", restaurantQueryResults[randomNum]);
         restaurantQueryResults.splice(randomNum, 1);
         splicedQueryResults = true;
         pickRestaurant();
