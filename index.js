@@ -539,16 +539,21 @@ function pickRestaurant() {
 }
 
 function checkCategories(categoriesArray) {
-    for (let category of currentCategories) {
-        for (let queriedCategory of categoriesArray) {
-            if (category === queriedCategory.id) {
-                return true;
-            } else {
-                continue;
+    if (currentCategories.find(id => id === "4bf58dd8d48988d1c4941735")) {
+        console.log("generic search");
+        return true;
+    } else {
+        for (let category of currentCategories) {
+            for (let queriedCategory of categoriesArray) {
+                if (category === queriedCategory.id) {
+                    return true;
+                } else {
+                    continue;
+                }
             }
         }
+        return false;
     }
-    return false;
 }
 
 function fetchDistance(latLong, randomNum) {
@@ -690,6 +695,7 @@ function fetchCategories() {
         }
     }
     if (clickedCategories.length === 0) {
+        currentCategories.push("4bf58dd8d48988d1c4941735");
         return "4bf58dd8d48988d1c4941735";
     } else {
         currentCategories.push(...clickedCategories);
