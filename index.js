@@ -33,6 +33,11 @@ function fetchDirections(latLong) {
                 return response.json();
             } else {
                 console.log(response);
+                $('.restaurant').append(`
+                <h2>Error:</h2>
+                <p>Looks like something went wrong while fetching directions.
+                Please wait a few seconds, check your input for typos, and try again.</p>
+                `);
                 throw new Error(response.statusText);
             }
         })
@@ -64,7 +69,6 @@ function displayDirections(data) {
         const legs = data.route.legs;
         for (let leg of legs) {
             for (let i = 0; i < leg.maneuvers.length; i++) {
-                console.log(leg.maneuvers[i]);
                 if (i < leg.maneuvers.length - 1) {
                     const mapURL = fetchDirectionsStepMapURL(`https${leg.maneuvers[i]["mapUrl"].slice(4)}`);
                     directionsHTMLArray.push(`
@@ -89,7 +93,7 @@ function displayDirections(data) {
             <ol>
                 ${directionsHTMLArray.join('\r')}
             </ol>
-            <p>Use of directions and maps is subject to the <a href="http://hello.mapquest.com/terms-of-use/" target="_blank">MapQuest Terms of Use</a>. 
+            <p>Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" target="_blank">MapQuest Terms of Use</a>. 
             We make no guarantee of the accuracy of their content, road conditions or route usability. 
             You assume all risk of use.</p>
             `);
@@ -200,6 +204,11 @@ function fetchRestaurants() {
                 console.log(response);
                 throw new Error(response.statusText);
             } else {
+                $('.restaurant').html(
+                    `<h2>Error:</h2>
+                    <p>Looks like something went wrong while looking for a restaurant.
+                    Please wait a few seconds and try again.</p>`
+                );
                 console.log(response);
                 throw new Error(response.statusText);
             }
@@ -453,6 +462,7 @@ function fetchHoursHTML(restaurantInfo, restaurantInfoKeys) {
             return hoursHTMLArray.join('\r');
         }
         catch(e) {
+            console.log(e);
             return "<li>Sorry, hours not available</li>"
         }
     } else {
@@ -534,10 +544,10 @@ function pickRestaurant() {
         const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
         const randomRestaurant = restaurantQueryResults[randomNum];
         console.log(randomRestaurant);
-        if (checkCategories(restaurantQueryResults[randomNum].venue.categories)) {
+        if (checkCategories(randomRestaurant.venue.categories)) {
             fetchDistance(`${randomRestaurant.venue.location.lat},${randomRestaurant.venue.location.lng}`, randomNum);
         } else {
-            console.log("false category removed", restaurantQueryResults[randomNum]);
+            console.log("false category removed", randomRestaurant);
             restaurantQueryResults.splice(randomNum, 1);
             splicedQueryResults = true;
             pickRestaurant();
@@ -571,6 +581,11 @@ function fetchDistance(latLong, randomNum) {
             if (response.ok) {
                 return response.json();
             } else {
+                $('.restaurant').append(`
+                <h2>Error:</h2>
+                <p>Looks like something went wrong while looking for a restaurant.
+                Please wait a few seconds, check your input for typos, and try again.</p>
+                `);
                 console.log(response);
                 throw new Error(response.statusText);
             }
@@ -605,6 +620,11 @@ function fetchRestaurantDetails(id) {
             if (response.ok) {
                 return response.json();
             } else {
+                $('.restaurant').append(`
+                <h2>Error:</h2>
+                <p>Looks like something went wrong while finding a restaurant.
+                Please wait a few seconds, check your input for typos, and try again.</p>
+                `);
                 console.log(response);
                 throw new Error(response.statusText);
             }
@@ -672,7 +692,7 @@ function fetchCategories() {
         "Breakfast",
         "Buffet",
         "Burgers",
-        "Café",
+        "Cafe",
         "Coffee-Shop",
         "Comfort-Food",
         "Deli-Bodega",
