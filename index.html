@@ -9,17 +9,21 @@
     <meta name="description" content="A web app that helps users find a random restaurant that meets their needs.">
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Zilla+Slab&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <header>
-        <h1>Restaurant Roulette</h1>
+        <div id="header-container">
+            <h1>Restaurant Roulette</h1>
+            <p>Are you hungry, but can't decide where to eat? Are you planning a meal with one or more companions and no one
+                can agree on a destination? <em>Restaurant Roulette</em> is here to help! Just enter some basic information
+                below and spin the restaurant wheel to find a random restaurant that meets your needs!
+            </p>
+        </div>
     </header>
     <main>
-        <p>Are you hungry, but can't decide where to eat? Are you planning a meal with one or more companions and no one
-            can agree on a destination? <em>Restaurant Roulette</em> is here to help! Just enter some basic information
-            below and spin the restaurant wheel to find a random restaurant that meets your needs!</p>
         <form id="restaurant-form">
             <fieldset>
                 <legend>Please enter some basic information about where you'd like to eat</legend>

@@ -16,10 +16,11 @@ function handleForm() {
         queryCounter = 0;
         splicedQueryResults = false;
         $('.restaurant').empty();
-        if ($('.restaurant').hasClass('hidden')) {
+        $('#directions-container').remove()
+        $('.utensils').toggleClass('hidden');
+        if (!$('.restaurant').hasClass('hidden')) {
             $('.restaurant').toggleClass('hidden');
         }
-        $('.utensils').toggleClass('hidden');
         fetchRestaurants();
     });
 }
@@ -38,6 +39,9 @@ function fetchDirections(latLong) {
                 <p>Looks like something went wrong while fetching directions.
                 Please wait a few seconds, check your input for typos, and try again.</p>
                 `);
+                if ($('.restaurant').hasClass('hidden')) {
+                    $('.restaurant').toggleClass('hidden');
+                }
                 throw new Error(response.statusText);
             }
         })
@@ -74,7 +78,7 @@ function displayDirections(data) {
                     directionsHTMLArray.push(`
                         <li>
                             <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
-                            <img src="${mapURL}" alt="route-map-maneuver-${i+1}">
+                            <img src="${mapURL}" alt="route-map-maneuver-${i+1}" class="route-map-maneuver">
                             <p>After you travel approximately ${formatDistance(leg.maneuvers[i]["distance"])} and after about ${formatTime(leg.maneuvers[i]["time"])}:</p> 
                         </li>`);
                 } else {
@@ -190,6 +194,9 @@ function fetchRestaurants() {
                 return response.json();
             } else if (response.status === 400) {
                 $('.utensils').toggleClass('hidden');
+                if ($('.restaurant').hasClass('hidden')) {
+                    $('.restaurant').toggleClass('hidden');
+                }
                 $('.restaurant').html(
                     `<h2>Error:</h2>
                     <p>The location "${$('#location').val()}" could not be found.  
@@ -204,6 +211,9 @@ function fetchRestaurants() {
                 console.log(response);
                 throw new Error(response.statusText);
             } else {
+                if ($('.restaurant').hasClass('hidden')) {
+                    $('.restaurant').toggleClass('hidden');
+                }
                 $('.restaurant').html(
                     `<h2>Error:</h2>
                     <p>Looks like something went wrong while looking for a restaurant.
@@ -226,9 +236,15 @@ function loadRestaurants(data) {
     for (let responseGroup of responseGroupsArray) {
         if (totalRestaurantsFound === 0) {
             $('.utensils').toggleClass('hidden');
+            if ($('.restaurant').hasClass('hidden')) {
+                $('.restaurant').toggleClass('hidden');
+            }
             $('.restaurant').html("<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>")
         } else if (queryCounter === 10 && restaurantQueryResults.length === 0) {
             $('.utensils').toggleClass('hidden');
+            if ($('.restaurant').hasClass('hidden')) {
+                $('.restaurant').toggleClass('hidden');
+            }
             $('.restaurant').html("<p>Sorry, looks like something went wrong.  Try again with different parameters.</p>")
         } else if (queryCounter === 10 && restaurantQueryResults.length !== 0) {
             pickRestaurant();
@@ -248,6 +264,9 @@ function loadRestaurants(data) {
 function displayRandomRestaurant(data) {
     if (!$('.utensils').hasClass('hidden')) {
         $('.utensils').toggleClass('hidden');
+    }
+    if ($('.restaurant').hasClass('hidden')) {
+        $('.restaurant').toggleClass('hidden');
     }
     console.log(data);
     const restaurantInfo = data.response.venue;
@@ -303,10 +322,10 @@ function displayRandomRestaurant(data) {
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
     }
     $('#display-different-r').on("click", () => {
-        $('#directions-form').remove();
-        $('.directions').remove();
+        $('#directions-container').remove();
         $('.restaurant').empty();
         $('.utensils').toggleClass('hidden');
+        $('.restaurant').toggleClass('hidden');
         pickRestaurant();
     });
     $(document).ready(() => {
@@ -318,33 +337,35 @@ function displayRandomRestaurant(data) {
 
 function fetchMap(latLong) {
     loadMap(latLong);
-    $('.restaurant').append(`
-        <form id="directions-form">
-            <fieldset>
-                <legend>If you'd like directions, please provide an address for the point of departure</legend>
-                <div class="departure-container">
-                    <label for="mode">Mode of travel: </label>
-                    <select id="mode">
-                        <option value="fastest">Driving</option>
-                        <option value="pedestrian">Walking</option>
-                        <option value="bicycle">Cycling</option>
-                    </select>
-                    <label for="street">Street: </label>
-                    <input type="text" id="street" name="street" required>
-                    <label for="city">City: </label>
-                    <input type="text" id="city" name="city" required>
-                    <label for="state">State: </label>
-                    <input type="text" id="state" name="state">
-                    <button type="submit">Find Directions</button>
-                </div>
-            </fieldset>
-        </form>
+    $('.restaurant').after(`
+        <section id="directions-container">
+            <form id="directions-form">
+                <fieldset>
+                    <legend>If you'd like directions, please provide an address for the point of departure</legend>
+                    <div class="departure-container">
+                        <label for="mode">Mode of travel: </label>
+                        <select id="mode">
+                            <option value="fastest">Driving</option>
+                            <option value="pedestrian">Walking</option>
+                            <option value="bicycle">Cycling</option>
+                        </select>
+                        <label for="street">Street: </label>
+                        <input type="text" id="street" name="street" required>
+                        <label for="city">City: </label>
+                        <input type="text" id="city" name="city" required>
+                        <label for="state">State: </label>
+                        <input type="text" id="state" name="state">
+                    </div>
+                </fieldset>
+                <button type="submit">Find Directions</button>
+            </form>
+        </section>
     `);
     $('#directions-form').submit(event => {
         event.preventDefault();
         $('.wheel').toggleClass('hidden');
         $('.directions').remove();
-        $('.restaurant').append('<div class="directions"></div>');
+        $('#directions-container').append('<div class="directions"></div>');
         fetchDirections(latLong);
     });
 }
@@ -539,6 +560,9 @@ function fetchRestaurantAddressHTML(restaurantInfo, restaurantInfoKeys) {
 function pickRestaurant() {
     if (restaurantQueryResults.length === 0 && splicedQueryResults) {
         $('.utensils').toggleClass('hidden');
+        if ($('.restaurant').hasClass('hidden')) {
+            $('.restaurant').toggleClass('hidden');
+        }
         $('.restaurant').html("<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>")
     } else {
         const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
@@ -581,6 +605,9 @@ function fetchDistance(latLong, randomNum) {
             if (response.ok) {
                 return response.json();
             } else {
+                if ($('.restaurant').hasClass('hidden')) {
+                    $('.restaurant').toggleClass('hidden');
+                }
                 $('.restaurant').append(`
                 <h2>Error:</h2>
                 <p>Looks like something went wrong while looking for a restaurant.
@@ -620,6 +647,9 @@ function fetchRestaurantDetails(id) {
             if (response.ok) {
                 return response.json();
             } else {
+                if ($('.restaurant').hasClass('hidden')) {
+                    $('.restaurant').toggleClass('hidden');
+                }
                 $('.restaurant').append(`
                 <h2>Error:</h2>
                 <p>Looks like something went wrong while finding a restaurant.
