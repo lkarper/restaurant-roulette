@@ -5,18 +5,23 @@
 html {
     color: black;
     font-family: 'Zilla Slab', serif;
+    overflow-y: scroll;
+}
+
+#background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
     background-image:
     linear-gradient(
         rgba(0, 0, 0, 0.3),
         rgba(0, 0, 0, 0.3)
     ),url(images/food9.jpg);
     background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    z-index: -1;
-    height: 100vh;
-    width: 100%;
+    z-index: -10;
+    margin: 0;
 }
 
 html, body {
@@ -385,10 +390,15 @@ a:hover, a:focus {
         height: auto;
     }
 
+    .utensils, .wheel {
+        font-size: 80px;
+        margin: 30px;
+    }
+
 }
 
 @media screen and (min-width: 1200px) {
-    html {
+    #background {
         background-image:
             linear-gradient(
             rgba(0, 0, 0, 0.3),
@@ -419,6 +429,10 @@ a:hover, a:focus {
 
     .spin {
         align-self: center;
-    }    
+    }
     
+    #map {
+        align-self: flex-start;
+    }
+
 }
