@@ -318,12 +318,7 @@ a:hover, a:focus {
     }
 
     .restaurant {
-        max-width: 90%;
         padding: 20px;
-    }
-
-    #directions-container {
-        max-width: 90%;
     }
 
     #map {
@@ -334,6 +329,10 @@ a:hover, a:focus {
     .restaurant-best-photo, .food-photo{
         width: auto;
         height: 400px;
+    }
+
+    .food-photo {
+        margin: auto auto auto 10px;
     }
     
     .restaurant h2 {
@@ -395,16 +394,20 @@ a:hover, a:focus {
         margin: 30px;
     }
 
+    footer, #header-container, .restaurant, #restaurant-form, #directions-container {
+        max-width: 90%;
+    }
+
 }
 
 @media screen and (min-width: 1200px) {
     #background {
         background-image:
-            linear-gradient(
-            rgba(0, 0, 0, 0.3),
-            rgba(0, 0, 0, 0.3)),
-            url(images/food9-rotated.jpg);
+        linear-gradient(rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)),
+        url(images/happy.jpg);
         background-size: cover;
+        background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
@@ -414,13 +417,14 @@ a:hover, a:focus {
             rgba(0, 0, 0, 0.5)),
             url(images/happy.jpg);
     }
+     */
+    
+    header {
+        justify-content: flex-start;
+    }
 
-    .hidden {
-        display: none;
-    } */
-
-    footer, #header-container, .restaurant, #restaurant-form, #directions-container {
-        max-width: 80%;
+    #header-container {
+        margin-top: 50px;
     }
     
     #restaurant-form {
@@ -433,6 +437,15 @@ a:hover, a:focus {
     
     #map {
         align-self: flex-start;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .route-map-maneuver {
+        width: 25%;
+        height: auto;
     }
 
 }
