@@ -163,7 +163,7 @@ form button:hover, .restaurant > button:hover, form button:focus, .restaurant > 
         ),url(images/button2.jpg);
 }
 
-form button:active, .restaurant > button:active {
+form button:active, .restaurant > button:active, .to-top:active {
     box-shadow: 2px 2px rgba(0, 0, 0, 0.5);
     transform: translateY(4px);
 }
@@ -298,6 +298,34 @@ a:hover, a:focus {
 #directions-form button {
     max-width: 250px;
     align-self: center;
+}
+
+.to-top {
+    position: fixed;
+    z-index: 99;
+    width: 50px;
+    height: 50px;
+    bottom: 25px;
+    right: 10px;
+    background-image:         
+        linear-gradient(rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.3)),
+        url(images/button2.jpg);
+    background-size: cover;
+    color: white;
+    border: none;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    border: none;
+    box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+}
+
+
+.to-top:hover, .to-top:focus {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)  
+        ),url(images/button2.jpg);
 }
 
 @media screen and (min-width: 750px) {
@@ -446,6 +474,23 @@ a:hover, a:focus {
     .route-map-maneuver {
         width: 25%;
         height: auto;
+    }
+
+    .to-top {
+        width: 100px;
+        bottom: 50px;
+        right: 20px;
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.3)  
+            ),url(images/eat.png);
+    }
+
+    .to-top:hover, .to-top:focus {
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)  
+            ),url(images/eat.png);
     }
 
 }

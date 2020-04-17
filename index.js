@@ -25,6 +25,26 @@ function handleForm() {
     });
 }
 
+function handleToTop() {
+    $(window).scroll(function() {
+        if (!$('.to-top').hasClass('hidden')) {
+            $('.to-top').fadeOut('slow');
+            clearTimeout($.data(this, 'scrollTimer'));
+            $.data(this, 'scrollTimer', setTimeout(function() {
+                $('.to-top').fadeIn('slow');
+            }, 500));
+        }
+    });
+}
+
+function returnToSearch() {
+    $('.to-top').click(() => {
+        $('html, body').animate({
+            scrollTop: $('#restaurant-form').offset().top - 50
+        }, 'slow');
+    });
+}
+
 function fetchDirections(latLong) {
     const baseURL = "https://www.mapquestapi.com/directions/v2/route?";
     const params = getDirectionsParams(latLong);
@@ -34,19 +54,18 @@ function fetchDirections(latLong) {
                 return response.json();
             } else {
                 console.log(response);
-                $('.restaurant').append(`
-                <h2>Error:</h2>
-                <p>Looks like something went wrong while fetching directions.
-                Please wait a few seconds, check your input for typos, and try again.</p>
-                `);
-                if ($('.restaurant').hasClass('hidden')) {
-                    $('.restaurant').toggleClass('hidden');
-                }
                 throw new Error(response.statusText);
             }
         })
         .then(responseJson => displayDirections(responseJson))
-        .catch(error => console.log("error", error));
+        .catch(error => {
+            console.log("error", error);
+            $('.directions').append(`
+            <h2>Error:</h2>
+            <p>Looks like something went wrong while fetching directions.
+            Please wait a few seconds, check your input for typos, and try again.</p>
+            `);
+        });
 }
 
 function displayDirections(data) {
@@ -60,42 +79,23 @@ function displayDirections(data) {
         );
         $(document).ready(() => {
             $('html, body').animate({
-                scrollTop: $('.directions').offset().top
+                scrollTop: $('.directions').offset().top  - 50
             }, 'slow');
         });
     } else {
-        const directionsHTMLArray = [];
         const copyrightText = "© 2019 MapQuest, Inc.";
         const logoURL = "https://api.mqcdn.com/res/mqlogo.gif";
         const imageAltText = "© 2019 MapQuest, Inc.";
         const totalDistance = roundNumber(data.route.distance, 0.25);
         const totalTime = roundNumber(data.route.realTime / 60, 1);
         const legs = data.route.legs;
-        for (let leg of legs) {
-            for (let i = 0; i < leg.maneuvers.length; i++) {
-                if (i < leg.maneuvers.length - 1) {
-                    const mapURL = fetchDirectionsStepMapURL(`https${leg.maneuvers[i]["mapUrl"].slice(4)}`);
-                    directionsHTMLArray.push(`
-                        <li>
-                            <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
-                            <img src="${mapURL}" alt="route-map-maneuver-${i+1}" class="route-map-maneuver">
-                            <p>After you travel approximately ${formatDistance(leg.maneuvers[i]["distance"])} and after about ${formatTime(leg.maneuvers[i]["time"])}:</p> 
-                        </li>`);
-                } else {
-                    directionsHTMLArray.push(`
-                        <li>
-                            <p><img src="https${leg.maneuvers[i]["iconUrl"].slice(4)}" alt="direction-icon"> ${leg.maneuvers[i]["narrative"]}</p>
-                            <p>You will have reached your destination.</p> 
-                        </li>`);
-                }
-            }
-        }
+        const directionsHTML = fetchDirectionsHTML(legs);
         $('.directions').html(`
             <p><img src="${logoURL}" alt="${imageAltText}"> ${copyrightText}</p>
             <p><b>Length of journey:</b> ${totalDistance} mi.</p>
             <p><b>Estimated time to reach destination:</b> ${totalTime} min.</p>
             <ol>
-                ${directionsHTMLArray.join('\r')}
+                ${directionsHTML}
             </ol>
             <p>Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" target="_blank">MapQuest Terms of Use</a>. 
             We make no guarantee of the accuracy of their content, road conditions or route usability. 
@@ -103,10 +103,34 @@ function displayDirections(data) {
             `);
         $(document).ready(() => {
             $('html, body').animate({
-                scrollTop: $('.directions').offset().top
+                scrollTop: $('.directions').offset().top  - 50
             }, 'slow');
         });
     }
+}
+
+function fetchDirectionsHTML(legs) {
+    const directionsHTMLArray = [];
+    for (let leg of legs) {
+        for (let i = 0; i < leg.maneuvers.length; i++) {
+            if (i < leg.maneuvers.length - 1) {
+                const mapURL = fetchDirectionsStepMapURL(`https${leg.maneuvers[i].mapUrl.slice(4)}`);
+                directionsHTMLArray.push(`
+                    <li>
+                        <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="direction-icon"> ${leg.maneuvers[i].narrative}</p>
+                        <img src="${mapURL}" alt="route-map-maneuver-${i+1}" class="route-map-maneuver">
+                        <p>After you travel approximately ${formatDistance(leg.maneuvers[i].distance)} and after about ${formatTime(leg.maneuvers[i].time)}:</p> 
+                    </li>`);
+            } else {
+                directionsHTMLArray.push(`
+                    <li>
+                        <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="direction-icon"> ${leg.maneuvers[i].narrative}</p>
+                        <p>You will have reached your destination.</p> 
+                    </li>`);
+            }
+        }
+    }
+    return directionsHTMLArray.join('\r');
 }
 
 function fetchDirectionsStepMapURL(mapBaseURL) {
@@ -205,12 +229,13 @@ function fetchRestaurants() {
                 );
                 $(document).ready(() => {
                     $('html, body').animate({
-                        scrollTop: $('.restaurant').offset().top
+                        scrollTop: $('.restaurant').offset().top - 50
                     }, 'slow');
                 });
                 console.log(response);
                 throw new Error(response.statusText);
             } else {
+                $('.utensils').toggleClass('hidden');
                 if ($('.restaurant').hasClass('hidden')) {
                     $('.restaurant').toggleClass('hidden');
                 }
@@ -219,6 +244,11 @@ function fetchRestaurants() {
                     <p>Looks like something went wrong while looking for a restaurant.
                     Please wait a few seconds and try again.</p>`
                 );
+                $(document).ready(() => {
+                    $('html, body').animate({
+                        scrollTop: $('.restaurant').offset().top - 50
+                    }, 'slow');
+                });
                 console.log(response);
                 throw new Error(response.statusText);
             }
@@ -227,7 +257,20 @@ function fetchRestaurants() {
             console.log(queryCounter, responseJson)
             loadRestaurants(responseJson);
         })
-        .catch(error => console.log('error', error));
+        .catch(error => {
+            console.log('error', error);
+            if (!$('.utensils').hasClass('hidden')) {
+                $('.utensils').toggleClass('hidden');
+            }
+            if ($('.restaurant').hasClass('hidden')) {
+                $('.restaurant').toggleClass('hidden');
+                $('.restaurant').html(
+                    `<h2>Error:</h2>
+                    <p>Looks like something went wrong while looking for a restaurant.
+                    Please wait a few seconds and try again.</p>`
+                );
+            }
+        });
 }
 
 function loadRestaurants(data) {
@@ -268,6 +311,7 @@ function displayRandomRestaurant(data) {
     if ($('.restaurant').hasClass('hidden')) {
         $('.restaurant').toggleClass('hidden');
     }
+    $('.to-top').removeClass('hidden');
     console.log(data);
     const restaurantInfo = data.response.venue;
     const restaurantInfoKeys = Object.keys(restaurantInfo);
@@ -319,6 +363,7 @@ function displayRandomRestaurant(data) {
     if (latLong) {
         fetchMap(latLong);
     } else {
+        $('#map').append("<p>Sorry, map not available for this location.</p>");
         $('.restaurant').append("<p>Sorry, directions not available for this location.</p>");
     }
     $('#display-different-r').on("click", () => {
@@ -330,7 +375,7 @@ function displayRandomRestaurant(data) {
     });
     $(document).ready(() => {
         $('html, body').animate({
-            scrollTop: $('.restaurant').offset().top
+            scrollTop: $('.restaurant').offset().top - 50
         }, 'slow');
     });
 }
@@ -481,8 +526,7 @@ function fetchHoursHTML(restaurantInfo, restaurantInfoKeys) {
                 hoursHTMLArray.push(`<li>${object.days}: ${timesArray.join(', ')}</li>`);
             }
             return hoursHTMLArray.join('\r');
-        }
-        catch(e) {
+        } catch(e) {
             console.log(e);
             return "<li>Sorry, hours not available</li>"
         }
@@ -605,10 +649,13 @@ function fetchDistance(latLong, randomNum) {
             if (response.ok) {
                 return response.json();
             } else {
+                if (!$('.utensils').hasClass('hidden')) {
+                    $('.utensils').toggleClass('hidden');
+                }
                 if ($('.restaurant').hasClass('hidden')) {
                     $('.restaurant').toggleClass('hidden');
                 }
-                $('.restaurant').append(`
+                $('.restaurant').html(`
                 <h2>Error:</h2>
                 <p>Looks like something went wrong while looking for a restaurant.
                 Please wait a few seconds, check your input for typos, and try again.</p>
@@ -618,9 +665,23 @@ function fetchDistance(latLong, randomNum) {
             }
         })
         .then(responseJson => {
-            console.log(responseJson, "fetchDistance results")
-            setAndCheckCurrentDistance(responseJson, randomNum)})
-        .catch(error => console.log("error", error));
+            console.log(responseJson, "fetchDistance results");
+            setAndCheckCurrentDistance(responseJson, randomNum);
+        })
+        .catch(error => {
+            console.log("error", error);
+            if ($('.restaurant').hasClass('hidden')) {
+                if (!$('.utensils').hasClass('hidden')) {
+                    $('.utensils').toggleClass('hidden');
+                }
+                $('.restaurant').toggleClass('hidden');
+                $('.restaurant').html(`
+                <h2>Error:</h2>
+                <p>Looks like something went wrong while looking for a restaurant.
+                Please wait a few seconds, check your input for typos, and try again.</p>
+                `);
+            }
+        });
 }
 
 function setAndCheckCurrentDistance(data, randomNum) {
@@ -647,10 +708,13 @@ function fetchRestaurantDetails(id) {
             if (response.ok) {
                 return response.json();
             } else {
+                if (!$('.utensils').hasClass('hidden')) {
+                    $('.utensils').toggleClass('hidden');
+                }
                 if ($('.restaurant').hasClass('hidden')) {
                     $('.restaurant').toggleClass('hidden');
                 }
-                $('.restaurant').append(`
+                $('.restaurant').html(`
                 <h2>Error:</h2>
                 <p>Looks like something went wrong while finding a restaurant.
                 Please wait a few seconds, check your input for typos, and try again.</p>
@@ -660,7 +724,20 @@ function fetchRestaurantDetails(id) {
             }
         })
         .then(responseJson => displayRandomRestaurant(responseJson))
-        .catch(error => console.log('error', error));
+        .catch(error => {
+            console.log('error', error);
+            if (!$('.utensils').hasClass('hidden')) {
+                $('.utensils').toggleClass('hidden');
+            }
+            if ($('.restaurant').hasClass('hidden')) {
+                $('.restaurant').toggleClass('hidden');
+                $('.restaurant').html(`
+                <h2>Error:</h2>
+                <p>Looks like something went wrong while finding a restaurant.
+                Please wait a few seconds, check your input for typos, and try again.</p>
+                `);
+            }
+        });
 }
 
 function getQueryParams() {
@@ -767,4 +844,10 @@ function fetchRadius() {
     return distance * 1609;
 }
 
-$(handleForm);
+function handleApp() {
+    handleForm();
+    handleToTop();
+    returnToSearch();
+}
+
+$(handleApp);
