@@ -303,6 +303,7 @@ a:hover, a:focus {
     height: 50px;
     bottom: 25px;
     right: 10px;
+    font-size: 12px;
 }
 
 .hidden {
@@ -405,6 +406,10 @@ a:hover, a:focus {
 
     .hidden {
         display: none;
+    }
+
+    .to-top {
+        width: 100px;
     }
 
 }

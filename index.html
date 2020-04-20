@@ -31,9 +31,8 @@
                 <div id="location-info" class="location-info">
                     <label for="location">Where would you like to eat? (Enter a city or zip code)</label>
                     <input type="text" id="location" class="location js-location" placeholder="e.g. New York, NY; 10010" required>
-                    <label for="radius">How many miles are you willing to travel from this location? (Max: 60
-                        mi.)</label>
-                    <input type="number" id="radius" class="radius" min="1" max="60" required>
+                    <label for="radius">How many miles are you willing to travel from this location? (Max: 60 mi.)</label>
+                    <input type="number" id="radius" class="radius js-radius" min="1" max="60" required>
                 </div>
             </fieldset>
             <fieldset id="categories" class="categories">
@@ -209,7 +208,7 @@
         <section class="restaurant js-restaurant hidden">
         </section>
         <i class="fad fa-spin fa-steering-wheel hidden wheel js-wheel"></i>
-        <button type="button" class="to-top js-to-top hidden button">Back to Top</button>
+        <button type="button" class="to-top js-to-top hidden button">New Search</button>
     </main>
     <footer>
         <p>This [application/service] uses the Foursquare® application programming interface but is not endorsed or
