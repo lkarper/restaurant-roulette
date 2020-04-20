@@ -8,7 +8,7 @@ html {
     overflow-y: scroll;
 }
 
-#background {
+.background {
     position: fixed;
     top: 0;
     left: 0;
@@ -18,7 +18,7 @@ html {
     linear-gradient(
         rgba(0, 0, 0, 0.3),
         rgba(0, 0, 0, 0.3)
-    ),url(images/food9.jpg);
+    ), url(images/food9.jpg);
     background-size: cover;
     z-index: -10;
     margin: 0;
@@ -62,7 +62,7 @@ header {
     align-items: center;
 }
 
-#header-container {
+.header-container {
     width: 95%;
     display: flex;
     flex-direction: column;
@@ -82,7 +82,7 @@ h1 {
     text-align: center;
 }
 
-h1, h2, h3, legend, button {
+h1, h2, h3, legend, .button {
     font-family: 'Special Elite', cursive;
 }
 
@@ -102,20 +102,20 @@ fieldset {
     margin: 10px;
 }
 
-#location {
+.location {
     max-width: 350px;
 }
 
-#radius {
+.radius {
     max-width: 40px;
 }
 
-#location-info {
+.location-info {
     display: flex;
     flex-direction: column;
 }
 
-#location-info label {
+.location-info label {
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -134,18 +134,18 @@ fieldset {
     margin: 5px;
 }
 
-#map {
+.map {
     width: 275px;
     height: 275px;
     align-self: center;
 }
 
-form button, .restaurant > button {
+.button {
     margin: 5px;
     background-image: linear-gradient(
         rgba(0, 0, 0, 0.3),
         rgba(0, 0, 0, 0.3)
-        ),url(images/button2.jpg);
+    ), url(images/button2.jpg);
     background-position: center;
     background-size: cover;
     color: white;
@@ -156,14 +156,14 @@ form button, .restaurant > button {
     border-radius: 2px;
 }
 
-form button:hover, .restaurant > button:hover, form button:focus, .restaurant > button:focus {
+.button:hover, .button:focus {
     background-image: linear-gradient(
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)  
-        ),url(images/button2.jpg);
+    ), url(images/button2.jpg);
 }
 
-form button:active, .restaurant > button:active, .to-top:active {
+.button:active {
     box-shadow: 2px 2px rgba(0, 0, 0, 0.5);
     transform: translateY(4px);
 }
@@ -181,7 +181,7 @@ input, select {
     margin: 5px;
 }
 
-.departure-container button {
+.departure-container .button {
     margin: 10px;
     max-width: 100px;
     align-self: center;
@@ -217,7 +217,7 @@ input, select {
     text-align: center;
 }
 
-#restaurant-form {
+.restaurant-form {
     display: flex;
     flex-direction: column;
     width: 90%;
@@ -235,7 +235,7 @@ input, select {
     max-width: 180px;
 }
 
-#directions-container {
+.directions-container {
     background-image: url(images/paper6.jpg);
     margin-top: 50px;
     width: 90%;
@@ -245,27 +245,23 @@ input, select {
     flex-direction: column;
 }
 
-.hidden {
-    display: none;
-}
-
 fieldset {
     border: none;
 }
 
-#categories {
+.categories {
     padding-top: 10px;
     padding-bottom: 0;
 }
 
-#categories legend::before {
+.categories legend::before {
     content: "";
     display: block;
     border-top: 1px solid black;
     padding-bottom: 20px;
 }
 
-#categories::after {
+.categories::after {
     content: "";
     display: block;
     border-bottom: 1px solid black;
@@ -284,18 +280,18 @@ a:hover, a:focus {
     line-height: 25px;
 }
 
-#directions-form {
+.directions-form {
     display: flex;
     flex-direction: column;
     width: 100%;
     margin: 0;
 }
 
-#directions-form input, #directions-form select {
+.directions-form input, .directions-form select {
     max-width: 80%;
 }
 
-#directions-form button {
+.directions-form .button {
     max-width: 250px;
     align-self: center;
 }
@@ -307,25 +303,10 @@ a:hover, a:focus {
     height: 50px;
     bottom: 25px;
     right: 10px;
-    background-image:         
-        linear-gradient(rgba(0, 0, 0, 0.3),
-        rgba(0, 0, 0, 0.3)),
-        url(images/button2.jpg);
-    background-size: cover;
-    color: white;
-    border: none;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    border: none;
-    box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.3);
-    border-radius: 2px;
 }
 
-
-.to-top:hover, .to-top:focus {
-    background-image: linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)  
-        ),url(images/button2.jpg);
+.hidden {
+    display: none;
 }
 
 @media screen and (min-width: 750px) {
@@ -349,7 +330,7 @@ a:hover, a:focus {
         padding: 20px;
     }
 
-    #map {
+    .map {
         width: 600px;
         height: 600px;
     }
@@ -365,10 +346,6 @@ a:hover, a:focus {
     
     .restaurant h2 {
         text-align: center;
-    }
-
-    .hidden {
-        display: none;
     }
 
     h1 {
@@ -395,16 +372,16 @@ a:hover, a:focus {
         font-size: 18px;
     }
 
-    button {
+    .button {
         font-size: 20px;
     }
     
-    #display-different-r {
+    .display-different-r {
         max-width: 300px;
         align-self: center;
     }
 
-    .departure-container button {
+    .departure-container .button {
         max-width: 300px;
     }
 
@@ -422,14 +399,19 @@ a:hover, a:focus {
         margin: 30px;
     }
 
-    footer, #header-container, .restaurant, #restaurant-form, #directions-container {
+    footer, .header-container, .restaurant, .restaurant-form, .directions-container {
         max-width: 90%;
+    }
+
+    .hidden {
+        display: none;
     }
 
 }
 
 @media screen and (min-width: 1200px) {
-    #background {
+
+    .background {
         background-image:
         linear-gradient(rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)),
@@ -439,23 +421,16 @@ a:hover, a:focus {
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
-    /* html {
-        background-image:
-            linear-gradient(rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.5)),
-            url(images/happy.jpg);
-    }
-     */
     
     header {
         justify-content: flex-start;
     }
 
-    #header-container {
+    .header-container {
         margin-top: 50px;
     }
     
-    #restaurant-form {
+    .restaurant-form {
         align-items: flex-start;
     }
 
@@ -463,7 +438,7 @@ a:hover, a:focus {
         align-self: center;
     }
     
-    #map {
+    .map {
         align-self: flex-start;
     }
 
@@ -483,14 +458,14 @@ a:hover, a:focus {
         background-image: linear-gradient(
             rgba(0, 0, 0, 0.3),
             rgba(0, 0, 0, 0.3)  
-            ),url(images/eat.png);
+        ), url(images/eat.png);
     }
 
     .to-top:hover, .to-top:focus {
         background-image: linear-gradient(
             rgba(0, 0, 0, 0.5),
             rgba(0, 0, 0, 0.5)  
-            ),url(images/eat.png);
+        ), url(images/eat.png);
     }
 
 }
