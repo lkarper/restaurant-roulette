@@ -44,6 +44,7 @@ footer p {
     max-width: 100%;
     font-size: 12px;
     padding: 10px;
+    margin-bottom: 0;
 }
 
 .utensils, .wheel {
