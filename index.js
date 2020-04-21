@@ -25,6 +25,11 @@
                 $('.js-restaurant').toggleClass('hidden');
             }
 
+            $(document).ready(() => {
+                $('html, body').animate({
+                    scrollTop: $('.js-utensils').offset().top - 50
+                }, 'slow');
+            });
             fetchRestaurants();
         });
     }
@@ -623,6 +628,11 @@
             $('.js-restaurant').empty();
             $('.js-utensils').toggleClass('hidden');
             $('.js-restaurant').toggleClass('hidden');
+            $(document).ready(() => {
+                $('html, body').animate({
+                    scrollTop: $('.js-utensils').offset().top - 50
+                }, 'slow');
+            });
             pickRestaurant();
         });
     }
@@ -686,6 +696,11 @@
         $('.js-directions-form').submit(event => {
             event.preventDefault();
             $('.js-wheel').toggleClass('hidden');
+            $(document).ready(() => {
+                $('html, body').animate({
+                    scrollTop: $('.js-wheel').offset().top - 50
+                }, 'slow');
+            });
             $('.js-directions').remove();
             $('.js-directions-container').append('<section class="directions js-directions"></section>');
             fetchDirections(latLong);
@@ -713,6 +728,7 @@
     }
 
     function handleDirectionsAPIError() {
+        $('.js-wheel').toggleClass('hidden');
         $('.js-directions').append(`
             <h2>Error:</h2>
             <p>Looks like something went wrong while fetching directions.
