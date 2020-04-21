@@ -278,6 +278,15 @@ a:hover, a:focus {
 
 .directions {
     line-height: 25px;
+    padding: 10px;
+}
+
+.directions ol {
+    padding-left: 20px;
+}
+
+ol li {
+    padding-left: 10px;
 }
 
 .directions-form {
@@ -417,6 +426,10 @@ a:hover, a:focus {
         width: 100px;
     }
 
+    .directions {
+        padding-left: 40px;
+    }
+
     .hidden {
         display: none;
     }
@@ -459,6 +472,10 @@ a:hover, a:focus {
     .route-map-maneuver {
         width: 25%;
         height: auto;
+    }
+
+    .directions {
+        padding-left: 50px;
     }
 
     .to-top {

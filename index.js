@@ -576,7 +576,7 @@
             return `<p><b>Rating:</b> ${restaurantInfo.rating}</p>`;
         }
 
-        return '<p>Rating not available</p>';
+        return '<p>Rating not available.</p>';
     }
 
     function getPriceHTML(restaurantInfo, restaurantInfoKeys) {
