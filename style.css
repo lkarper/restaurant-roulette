@@ -306,6 +306,11 @@ a:hover, a:focus {
     font-size: 12px;
 }
 
+.display-different-r {
+    max-width: 250px;
+    align-self: center;
+}
+
 .hidden {
     display: none;
 }
@@ -371,6 +376,10 @@ a:hover, a:focus {
 
     input, select {
         font-size: 18px;
+    }
+
+    .radius {
+        max-width: 50px;
     }
 
     .button {
