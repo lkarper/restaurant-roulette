@@ -404,12 +404,12 @@ a:hover, a:focus {
         max-width: 90%;
     }
 
-    .hidden {
-        display: none;
-    }
-
     .to-top {
         width: 100px;
+    }
+
+    .hidden {
+        display: none;
     }
 
 }
@@ -417,10 +417,10 @@ a:hover, a:focus {
 @media screen and (min-width: 1200px) {
 
     .background {
-        background-image:
-        linear-gradient(rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)),
-        url(images/happy.jpg);
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+        ), url(images/happy.jpg);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -447,10 +447,6 @@ a:hover, a:focus {
         align-self: flex-start;
     }
 
-    .hidden {
-        display: none;
-    }
-
     .route-map-maneuver {
         width: 25%;
         height: auto;
@@ -471,6 +467,10 @@ a:hover, a:focus {
             rgba(0, 0, 0, 0.5),
             rgba(0, 0, 0, 0.5)  
         ), url(images/eat.png);
+    }
+
+    .hidden {
+        display: none;
     }
 
 }

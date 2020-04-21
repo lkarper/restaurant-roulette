@@ -19,11 +19,12 @@
             queryCounter = 0;
             splicedQueryResults = false;
             $('.js-restaurant').empty();
-            $('.js-directions-container').remove()
+            $('.js-directions-container').remove();
             $('.js-utensils').toggleClass('hidden');
             if (!$('.js-restaurant').hasClass('hidden')) {
                 $('.js-restaurant').toggleClass('hidden');
             }
+
             fetchRestaurants();
         });
     }
@@ -48,6 +49,7 @@
         });
     }
 
+    // Fetches list of restaurants from Foursquare API that meet query parameters
     function fetchRestaurants() {
         const baseURL = 'https://api.foursquare.com/v2/venues/explore?';
         const params = getSearchQueryParams();
@@ -78,7 +80,7 @@
                 }
             })
             .then(responseJson => {
-                console.log(queryCounter, responseJson)
+                console.log(queryCounter, responseJson);
                 loadRestaurants(responseJson);
             })
             .catch(error => {
@@ -94,6 +96,7 @@
         if (!$('.js-utensils').hasClass('hidden')) {
             $('.js-utensils').toggleClass('hidden');
         }
+
         if ($('.js-restaurant').hasClass('hidden')) {
             $('.js-restaurant').toggleClass('hidden');
         }
@@ -147,9 +150,11 @@
                 price.push(i);
             }
         }
+
         if (price.length === 0) {
-            return "1,2,3,4";
+            return '1,2,3,4';
         }
+
         return price.join(',');
     }
 
@@ -193,13 +198,15 @@
             'Seafood',
             'Steakhouse',
             'Vegetarian-Vegan',
-            'Wing'
+            'Wings'
         ];
         for (let category of categories) {
             if ($(`#${category}`).prop('checked')) {
                 clickedCategories.push($(`#${category}`).val());
             }
         }
+
+        // Adds generic "restaurant" category to search parameters if no category is clicked by the user
         if (clickedCategories.length === 0) {
             currentCategories.push('4bf58dd8d48988d1c4941735');
             return '4bf58dd8d48988d1c4941735';
@@ -215,6 +222,7 @@
         return distance * 1609;
     }
 
+    // Stores restaurants returned by Foursquare API and updates search offset, since API only returns 50 restaurants at a time
     function loadRestaurants(data) {
         totalRestaurantsFound = data.response.totalResults;
         const responseGroupsArray = data.response.groups;
@@ -240,6 +248,7 @@
         }
     }
 
+    // Chooses a random restaurant from the array of restaurants returned by API
     function pickRestaurant() {
         if (restaurantQueryResults.length === 0 && splicedQueryResults) {
             toggleUtensilsAndRestaurant();
@@ -248,6 +257,11 @@
             const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
             const randomRestaurant = restaurantQueryResults[randomNum];
             console.log(randomRestaurant);
+
+            /**
+            * Filters out restaurants returned by the API that do not belong in the requested catgory 
+            * and are located outside of the requested search radius
+            */
             if (checkCategories(randomRestaurant.venue.categories)) {
                 fetchDistance(`${randomRestaurant.venue.location.lat},${randomRestaurant.venue.location.lng}`, randomNum);
             } else {
@@ -269,10 +283,12 @@
                     return true;
                 }
             }
+
             return false;
         }
     }
 
+    // Requests directions from MapQuest API so that location within search radius can be checked
     function fetchDistance(latLong, randomNum) {
         const baseURL = 'https://www.mapquestapi.com/directions/v2/route?';
         const params = getDirectionsParams(latLong);
@@ -334,6 +350,7 @@
         }
     }
 
+    // Fetches detailed information on random restaurant from Foursquare API
     function fetchRestaurantDetails(id) {
         const baseURL = 'https://api.foursquare.com/v2/venues/';
         const clientID = 'client_id=4MRDI4UFA2MFILISD0LH1WB2WZWQVP42WUECJQQ44HFPZUPV';
@@ -425,14 +442,19 @@
             const photosHTMLArray = [];
             for (let group of restaurantInfo.photos.groups) {
                 if (group.items.length > 1) {
-                    photosHTMLArray.push(`<img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo">`);
+                    photosHTMLArray.push(`
+                        <img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo">
+                    `);
                 }
             }
+
             if (photosHTMLArray.length !== 0) {
                 return photosHTMLArray.join('\r');
             }
+
             return '<p>Sorry, no photos of food available.</p>';
         }
+
         return '<p>Sorry, no photos of food available.</p>';
     }
 
@@ -442,6 +464,7 @@
             const suffix = restaurantInfo.bestPhoto.suffix;
             return `<img src="${prefix}original${suffix}" alt="restaurant photo" class="restaurant-best-photo">`;
         }
+
         return '<p>Sorry, no image available for this restaurant.</p>';
     }
 
@@ -451,13 +474,16 @@
             const lng = restaurantInfo.location.lng;
             return `${lat},${lng}`;
         }
+
         return false;
     }
 
     function getURLHTML(restaurantInfo, restaurantInfoKeys) {
         if (restaurantInfoKeys.includes('canonicalUrl')) {
-            return `<a href="${restaurantInfo.canonicalUrl}?ref=4MRDI4UFA2MFILISD0LH1WB2WZWQVP42WUECJQQ44HFPZUPV" target="_blank">View Restaurant on Foursquare</a>`;
+            return `<a href="${restaurantInfo.canonicalUrl}?ref=4MRDI4UFA2MFILISD0LH1WB2WZWQVP42WUECJQQ44HFPZUPV" 
+                target="_blank">View Restaurant on Foursquare</a>`;
         }
+
         return '<p>Restaurant url not available.</p>';
     }
 
@@ -468,8 +494,10 @@
             } else if (Object.keys(restaurantInfo.contact).includes('phone')) {
                 return restaurantInfo.contact.phone;
             }
+
             return 'Phone number not available.';
         }
+
         return 'Phone number not available.';
     }
 
@@ -486,13 +514,15 @@
                         }
                     }
                 }
+
                 return attributesHTMLArray.join('\r');
             } catch (e) {
                 console.log(e);
-                return "<li>Sorry, no attributes available</li>";
+                return '<li>Sorry, no attributes available</li>';
             }
         }
-        return "<li>Sorry, no attributes available</li>";
+
+        return '<li>Sorry, no attributes available</li>';
     }
 
     function getHoursHTML(restaurantInfo, restaurantInfoKeys) {
@@ -500,28 +530,34 @@
             try {
                 const hoursHTMLArray = [];
                 for (let object of restaurantInfo.hours.timeframes) {
-                    const timesArray = []
+                    const timesArray = [];
                     for (let time of object.open) {
                         timesArray.push(time.renderedTime);
                     }
+
                     hoursHTMLArray.push(`<li>${object.days}: ${timesArray.join(', ')}</li>`);
                 }
+
                 return hoursHTMLArray.join('\r');
             } catch(e) {
                 console.log(e);
                 return '<li>Sorry, hours not available</li>';
             }
         }
+
         return '<li>Sorry, hours not available</li>';
     }
 
     function getMenuHTML(restaurantInfo, restaurantInfoKeys) {
         if (restaurantInfoKeys.includes('hasMenu')) {
             if (restaurantInfo.hasMenu) {
-                return `<a href="${restaurantInfo.menu.url}?ref=4MRDI4UFA2MFILISD0LH1WB2WZWQVP42WUECJQQ44HFPZUPV" target="_blank">View Menu on Foursquare</a>`;
+                return `<a href="${restaurantInfo.menu.url}?ref=4MRDI4UFA2MFILISD0LH1WB2WZWQVP42WUECJQQ44HFPZUPV" 
+                    target="_blank">View Menu on Foursquare</a>`;
             }
+
             return '<p>Menu not available.</p>';
         }
+
         return '<p>Menu not available.</p>';
     }
 
@@ -529,6 +565,7 @@
         if (restaurantInfoKeys.includes('rating')) {
             return `<p><b>Rating:</b> ${restaurantInfo.rating}</p>`;
         }
+
         return '<p>Rating not available</p>';
     }
 
@@ -545,6 +582,7 @@
                     return '<p>The average price per entree is more than $30.</p>';
             }
         }
+
         return '<p>Sorry, no info available on pricing</p>';
     }
 
@@ -554,8 +592,10 @@
             for (let categoryObject of restaurantInfo.categories) {
                 categoriesHTMLArray.push(`<li>${categoryObject.name}</li>`);
             }
+
             return categoriesHTMLArray.join('\r');
         }
+
         return '<li>Sorry, no categories available</li>';
     }
 
@@ -566,15 +606,17 @@
                 for (let line of restaurantInfo.location.formattedAddress) {
                     addressHTMLArray.push(`<li>${line}</li>`);
                 }
+
                 return addressHTMLArray.join('\r');
-            }
-            catch (e) {
+            } catch (e) {
                 return '<p>Address not available</p>';
             }
         }
+
         return '<p>Address not available</p>';
     }
 
+    // Sets event listener to button that loads a different random restaurant without performing a new search
     function handleSpinAgain() {
         $('.js-display-different-r').click(() => {
             $('.js-directions-container').remove();
@@ -590,11 +632,12 @@
             loadMap(latLong);
             loadDirectionsForm(latLong);
         } else {
-            $('.js-map').append("<p>Sorry, map not available for this location.</p>");
-            $('.js-restaurant').append("<p>Sorry, directions not available for this location.</p>");
+            $('.js-map').append('<p>Sorry, map not available for this location.</p>');
+            $('.js-restaurant').append('<p>Sorry, directions not available for this location.</p>');
         }
     }
 
+    // Adds Mapbox to DOM with marker set to restaurant's location
     function loadMap(latLong) {
         const centerCoordinates = latLong.split(",").map(num => parseFloat(num)).reverse();
         console.log(centerCoordinates);
@@ -649,6 +692,7 @@
         });
     }
 
+    // Fetch directions to restaurant from Mapquest API
     function fetchDirections(latLong) {
         const baseURL = 'https://www.mapquestapi.com/directions/v2/route?';
         const params = getDirectionsParams(latLong);
@@ -710,10 +754,11 @@
                 <ol>
                     ${directionsHTML}
                 </ol>
-                <p>Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" target="_blank">MapQuest Terms of Use</a>. 
+                <p>Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" 
+                target="_blank">MapQuest Terms of Use</a>. 
                 We make no guarantee of the accuracy of their content, road conditions or route usability. 
                 You assume all risk of use.</p>
-                `);
+            `);
             $(document).ready(() => {
                 $('html, body').animate({
                     scrollTop: $('.js-directions').offset().top  - 50
@@ -730,24 +775,29 @@
                     const mapURL = getDirectionsStepMapURL(`https${leg.maneuvers[i].mapUrl.slice(4)}`);
                     directionsHTMLArray.push(`
                         <li>
-                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver icon"> ${leg.maneuvers[i].narrative}</p>
+                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver icon"> 
+                            ${leg.maneuvers[i].narrative}</p>
                             <img src="${mapURL}" alt="Map of maneuver number ${i + 1} of route" class="route-map-maneuver">
-                            <p>After you travel approximately ${formatDistance(leg.maneuvers[i].distance)} and after about ${formatTime(leg.maneuvers[i].time)}:</p> 
+                            <p>After you travel approximately ${formatDistance(leg.maneuvers[i].distance)} 
+                            and after about ${formatTime(leg.maneuvers[i].time)}:</p> 
                         </li>
                     `);
                 } else {
                     directionsHTMLArray.push(`
                         <li>
-                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver icon"> ${leg.maneuvers[i].narrative}</p>
+                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver icon"> 
+                            ${leg.maneuvers[i].narrative}</p>
                             <p>You will have reached your destination.</p> 
                         </li>
                     `);
                 }
             }
         }
+
         return directionsHTMLArray.join('\r');
     }
 
+    // Edits the zoom level and bounds of default route maneuver maps returned by API to improve legibility
     function getDirectionsStepMapURL(mapBaseURL) {
         const marker1Coordinates = mapBaseURL.split(/(locations=|\|marker|\|\|)/g)[2].split(",").map(num => parseFloat(num));
         const marker2Coordinates = mapBaseURL.split(/(locations=|\|marker|\|\|)/g)[6].split(",").map(num => parseFloat(num));
@@ -764,6 +814,7 @@
         if (marker1Coordinates[0] < marker2Coordinates[0] && marker1Coordinates[1] > marker2Coordinates[1]) {
             bounds = `${marker2Coordinates[0]},${marker2Coordinates[1]},${marker1Coordinates[0]},${marker1Coordinates[1]}`;
         }
+
         return `${mapBaseURL.replace(/&center.+&d/g, `&boundingBox=${bounds}&d`)}&margin=20`;
     }
 
@@ -774,10 +825,9 @@
     function formatDistance(miles) {
         if (miles < 0.25) {
             return `${roundNumber(miles * 5280, 1)} ft.`;
-        } 
-        else {
-            return `${roundNumber(miles, 0.25)} mi.`;
         }
+
+        return `${roundNumber(miles, 0.25)} mi.`;
     }
 
     function roundNumber(x, precision) {
@@ -788,9 +838,9 @@
     function getRouteType() {
         if ($('.js-mode').val()) {
             return $('.js-mode').val();
-        } else {
-            return 'fastest';
         }
+        
+        return 'fastest';
     }
 
     function getDeparturePoint() {
@@ -799,9 +849,9 @@
             const city = $('.js-city').val();
             const state = $('.js-state').val();
             return `${street}, ${city}, ${state}`;
-        } else {
-            return $('.js-location').val();
         }
+        
+        return $('.js-location').val();
     }
 
     function handleApp() {
