@@ -1,4 +1,4 @@
-// Wrapping code in an immediately-invoked function expression avoids the global scope
+// Wrapping code in an immediately-invoked function expression to avoid global variables
 (function() {
 
     const restaurantQueryResults = [];
@@ -54,7 +54,7 @@
         });
     }
 
-    // Fetches list of restaurants from Foursquare API that meet query parameters
+    // Fetches from Foursquare API list of restaurants that meet query parameters
     function fetchRestaurants() {
         const baseURL = 'https://api.foursquare.com/v2/venues/explore?';
         const params = getSearchQueryParams();
@@ -144,7 +144,7 @@
         const queryParamsArray = [];
         Object.keys(queryParamsObject).forEach(key => {
             queryParamsArray.push(`${key}=${queryParamsObject[key]}`);
-        })
+        });
         return queryParamsArray.join('&');
     }
 
@@ -234,7 +234,9 @@
         for (let responseGroup of responseGroupsArray) {
             if (totalRestaurantsFound === 0) {
                 toggleUtensilsAndRestaurant();
-                $('.js-restaurant').html('<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>');
+                $('.js-restaurant').html(`
+                    <p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>
+                `);
             } else if (queryCounter === 10 && restaurantQueryResults.length === 0) {
                 toggleUtensilsAndRestaurant();
                 $('.js-restaurant').html('<p>Sorry, looks like something went wrong.  Try again with different parameters.</p>');
@@ -257,7 +259,9 @@
     function pickRestaurant() {
         if (restaurantQueryResults.length === 0 && splicedQueryResults) {
             toggleUtensilsAndRestaurant();
-            $('.js-restaurant').html('<p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>')
+            $('.js-restaurant').html(`
+                <p>Sorry, no restaurant found that matches those parameters.  Try again with different parameters.</p>
+            `);
         } else {
             const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
             const randomRestaurant = restaurantQueryResults[randomNum];
@@ -279,6 +283,7 @@
     }
 
     function checkCategories(categoriesArray) {
+        // The id '4bf58dd8d48988d1c4941735' indicates a generic search, meaning a category check is unnecessary
         if (currentCategories.find(id => id === '4bf58dd8d48988d1c4941735')) {
             console.log("generic search");
             return true;
@@ -588,7 +593,7 @@
             }
         }
 
-        return '<p>Sorry, no info available on pricing</p>';
+        return '<p>Sorry, no info available on pricing.</p>';
     }
 
     function getCategoriesHTML(restaurantInfo, restaurantInfoKeys) {
@@ -614,11 +619,11 @@
 
                 return addressHTMLArray.join('\r');
             } catch (e) {
-                return '<p>Address not available</p>';
+                return '<p>Address not available.</p>';
             }
         }
 
-        return '<p>Address not available</p>';
+        return '<p>Address not available.</p>';
     }
 
     // Sets event listener to button that loads a different random restaurant without performing a new search
@@ -649,6 +654,7 @@
 
     // Adds Mapbox to DOM with marker set to restaurant's location
     function loadMap(latLong) {
+        // Loads map with focus on restaurant
         const centerCoordinates = latLong.split(",").map(num => parseFloat(num)).reverse();
         console.log(centerCoordinates);
         mapboxgl.accessToken = 'pk.eyJ1IjoibGthcnBlciIsImEiOiJjazh1NzRhZzMwN3hwM2VwNG0xZnM3c2JqIn0.dD8wiLFpEkdBZOdZt7N6VA';
@@ -658,7 +664,11 @@
             center: centerCoordinates,
             zoom: 15
         });
+
+        // Adds control buttons to Mapbox
         map.addControl(new mapboxgl.NavigationControl());
+
+        // Adds marker to map on location of restaurant
         const marker = new mapboxgl.Marker()
             .setLngLat(centerCoordinates)
             .addTo(map);
