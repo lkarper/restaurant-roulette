@@ -855,8 +855,10 @@
         const sec = roundNumber(seconds % 60, 15);
         if (sec === 0) {
             return `${min} min.`
+        } else if (sec === 60) {
+            return `${min + 1} min.`
         }
-        
+
         return `${min} min. and ${sec} sec.`;
     }
 
