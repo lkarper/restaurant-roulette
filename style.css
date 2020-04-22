@@ -320,6 +320,14 @@ ol li {
     align-self: center;
 }
 
+.mapquest-terms-1 {
+    margin-bottom: 0;
+}
+
+.mapquest-terms-2 {
+    margin-top: 5px;
+}
+
 .hidden {
     display: none;
 }

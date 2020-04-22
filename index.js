@@ -780,9 +780,9 @@
                 <ol>
                     ${directionsHTML}
                 </ol>
-                <p>Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" 
-                target="_blank">MapQuest Terms of Use</a>. 
-                We make no guarantee of the accuracy of their content, road conditions or route usability. 
+                <p class="mapquest-terms-1">Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" 
+                target="_blank">MapQuest Terms of Use</a>.</p>
+                <p class="mapquest-terms-2">We make no guarantee of the accuracy of their content, road conditions or route usability. 
                 You assume all risk of use.</p>
             `);
             $(document).ready(() => {
