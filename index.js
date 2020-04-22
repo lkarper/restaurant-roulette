@@ -583,13 +583,13 @@
         if (restaurantInfoKeys.includes('price')) {
             switch (restaurantInfo.price.tier) {
                 case 1:
-                    return '<p>The average price per entree is less than $10.</p>';
+                    return '<p>The average price per entrée is less than $10.</p>';
                 case 2:
-                    return '<p>The average price per entree is $10-$20.</p>';
+                    return '<p>The average price per entrée is $10-$20.</p>';
                 case 3:
-                    return '<p>The average price per entree is $20-$30.</p>';
+                    return '<p>The average price per entrée is $20-$30.</p>';
                 case 4:
-                    return '<p>The average price per entree is more than $30.</p>';
+                    return '<p>The average price per entrée is more than $30.</p>';
             }
         }
 
