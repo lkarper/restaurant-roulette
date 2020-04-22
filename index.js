@@ -845,7 +845,19 @@
     }
 
     function formatTime(seconds) {
-        return `${roundNumber(seconds / 60, 0.25)} min.`;
+        if (seconds < 5) {
+            return `${seconds} sec.`;
+        } else if (seconds >= 5 && seconds < 60) {
+            return `${roundNumber(seconds, 5)} sec.`;
+        }
+
+        const min = parseInt(seconds / 60);
+        const sec = roundNumber(seconds % 60, 15);
+        if (sec === 0) {
+            return `${min} min.`
+        }
+        
+        return `${min} min. and ${sec} sec.`;
     }
 
     function formatDistance(miles) {
