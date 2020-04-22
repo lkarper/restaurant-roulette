@@ -412,9 +412,7 @@
             ${urlHTML}
             <p><b>Phone:</b> ${phoneNumber}</p>
             <h3>Address:</h3>
-                <ul class="address-list">
-                    ${addressHTML}
-                </ul>
+            ${addressHTML}
             <div id="map" class="map js-map" role="img" aria-label="An interactive map that shows the location of the queried restaurant">
             </div>
             <h3>Categories:</h3>
@@ -614,10 +612,10 @@
             try {
                 const addressHTMLArray = [];
                 for (let line of restaurantInfo.location.formattedAddress) {
-                    addressHTMLArray.push(`<li>${line}</li>`);
+                    addressHTMLArray.push(`${line}`);
                 }
 
-                return addressHTMLArray.join('\r');
+                return `<address>${addressHTMLArray.join('<br>')}</address>`;
             } catch (e) {
                 return '<p>Address not available.</p>';
             }

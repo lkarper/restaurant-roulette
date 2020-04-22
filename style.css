@@ -198,7 +198,7 @@ input, select {
     margin-top: 100px;
 }
 
-.restaurant li {
+.restaurant li, address {
     line-height: 25px;
 }
 
@@ -207,10 +207,6 @@ input, select {
     height: auto;
     margin-left: auto;
     margin-right: auto;
-}
-
-.address-list {
-    list-style: none;
 }
 
 .restaurant h2 {
@@ -328,13 +324,18 @@ ol li {
     margin-top: 5px;
 }
 
+address {
+    margin-bottom: 25px;
+    font-style: normal;
+}
+
 .hidden {
     display: none;
 }
 
 @media screen and (min-width: 750px) {
 
-    p, a, .restaurant li {
+    p, a, .restaurant li, address {
         max-width: 80%;
         font-size: 24px;
         line-height: 36px;
