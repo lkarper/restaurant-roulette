@@ -712,7 +712,7 @@
                 }, 'slow');
             });
             $('.js-directions').remove();
-            $('.js-directions-container').append('<section class="directions js-directions"></section>');
+            $('.js-directions-container').append('<section class="directions js-directions" aria-live="polite"></section>');
             fetchDirections(latLong);
         });
     }
