@@ -774,12 +774,13 @@
             const legs = data.route.legs;
             const directionsHTML = getDirectionsHTML(legs);
             $('.js-directions').html(`
-                <p><img src="${logoURL}" alt="${imageAltText}"> ${copyrightText}</p>
+                <h2>Directions</h2>
                 <p><b>Length of journey:</b> ${totalDistance} mi.</p>
                 <p><b>Estimated time to reach destination:</b> ${totalTime} min.</p>
                 <ol>
                     ${directionsHTML}
                 </ol>
+                <p><img src="${logoURL}" alt="${imageAltText}"> ${copyrightText}</p>
                 <p class="mapquest-terms-1">Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" 
                 target="_blank">MapQuest Terms of Use</a>.</p>
                 <p class="mapquest-terms-2">We make no guarantee of the accuracy of their content, road conditions or route usability. 
