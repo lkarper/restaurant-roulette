@@ -849,7 +849,12 @@
         if (seconds < 5) {
             return `${seconds} sec.`;
         } else if (seconds >= 5 && seconds < 60) {
-            return `${roundNumber(seconds, 5)} sec.`;
+            const sec = roundNumber(seconds, 5);
+            if (sec === 60) {
+                return '1 min.';
+            }
+
+            return `${sec} sec.`;
         }
 
         const min = parseInt(seconds / 60);
