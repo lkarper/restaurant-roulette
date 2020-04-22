@@ -451,7 +451,7 @@
             for (let group of restaurantInfo.photos.groups) {
                 if (group.items.length > 1) {
                     photosHTMLArray.push(`
-                        <img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo">
+                        <img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo.">
                     `);
                 }
             }
@@ -470,7 +470,7 @@
         if (restaurantInfoKeys.includes('bestPhoto')) {
             const prefix = restaurantInfo.bestPhoto.prefix;
             const suffix = restaurantInfo.bestPhoto.suffix;
-            return `<img src="${prefix}original${suffix}" alt="restaurant photo" class="restaurant-best-photo">`;
+            return `<img src="${prefix}original${suffix}" alt="restaurant photo." class="restaurant-best-photo">`;
         }
 
         return '<p>Sorry, no image available for this restaurant.</p>';
@@ -778,7 +778,7 @@
                 <ol>
                     ${directionsHTML}
                 </ol>
-                <p><img src="${logoURL}" alt="${imageAltText}"> ${copyrightText}</p>
+                <p><img src="${logoURL}" alt="${imageAltText}."> ${copyrightText}</p>
                 <p class="mapquest-terms-1">Use of directions and maps is subject to the <a href="https://hello.mapquest.com/terms-of-use/" 
                 target="_blank">MapQuest Terms of Use</a>.</p>
                 <p class="mapquest-terms-2">We make no guarantee of the accuracy of their content, road conditions or route usability. 
@@ -800,9 +800,9 @@
                     const mapURL = getDirectionsStepMapURL(`https${leg.maneuvers[i].mapUrl.slice(4)}`);
                     directionsHTMLArray.push(`
                         <li>
-                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver icon"> 
+                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver."> 
                             ${leg.maneuvers[i].narrative}</p>
-                            <img src="${mapURL}" alt="Map of maneuver number ${i + 1} of route" class="route-map-maneuver">
+                            <img src="${mapURL}" alt="Map of maneuver number ${i + 1} of route." class="route-map-maneuver">
                             <p>After you travel approximately ${formatDistance(leg.maneuvers[i].distance)} 
                             and after about ${formatTime(leg.maneuvers[i].time)}:</p> 
                         </li>
@@ -810,7 +810,7 @@
                 } else {
                     directionsHTMLArray.push(`
                         <li>
-                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver icon"> 
+                            <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver."> 
                             ${leg.maneuvers[i].narrative}</p>
                             <p>You will have reached your destination.</p> 
                         </li>
