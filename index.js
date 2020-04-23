@@ -414,7 +414,7 @@
             <p><b>Phone:</b> ${phoneNumber}</p>
             <h3>Address:</h3>
             ${addressHTML}
-            <div id="map" class="map js-map" role="img" aria-label="An interactive map that shows the location of the queried restaurant">
+            <div id="map" class="map js-map" role="img" aria-label="An interactive map that shows the location of the queried restaurant.">
             </div>
             <h3>Categories:</h3>
                 <ul>
@@ -452,7 +452,7 @@
             for (let group of restaurantInfo.photos.groups) {
                 if (group.items.length > 1) {
                     photosHTMLArray.push(`
-                        <img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="restaurant photo.">
+                        <img class="food-photo" src="${group.items[1].prefix}original${group.items[1].suffix}" alt="Restaurant photo.">
                     `);
                 }
             }
@@ -471,7 +471,7 @@
         if (restaurantInfoKeys.includes('bestPhoto')) {
             const prefix = restaurantInfo.bestPhoto.prefix;
             const suffix = restaurantInfo.bestPhoto.suffix;
-            return `<img src="${prefix}original${suffix}" alt="restaurant photo." class="restaurant-best-photo">`;
+            return `<img src="${prefix}original${suffix}" alt="Restaurant photo." class="restaurant-best-photo">`;
         }
 
         return '<p>Sorry, no image available for this restaurant.</p>';
@@ -850,7 +850,6 @@
         }
         
         return mapBaseURL;
-        
     }
 
     function formatTime(seconds) {
@@ -869,7 +868,9 @@
         const sec = roundNumber(seconds % 60, 15);
         if (sec === 0) {
             return `${min} min.`
-        } else if (sec === 60) {
+        } 
+        
+        if (sec === 60) {
             return `${min + 1} min.`
         }
 
