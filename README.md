@@ -11,23 +11,23 @@ Restaurant Roulette was made for indecisive hungry people who know that they wan
 
 Landing page:
 
-![Landing screen](/screenshots/landing.png)
+![Landing screen](screenshots/landing.png)
 
 Search:
 
-![search page](/screenshots/search.png)
+![search page](screenshots/search.png)
 
 Restaurant Info:
 
-![restaurant info](/screenshots/results1.png)
-![restaurant info](/screenshots/results2.png)
-![restaurant info](/screenshots/results3.png)
-![restaurant info](/screenshots/results4.png)
+![restaurant info](screenshots/results1.png)
+![restaurant info](screenshots/results2.png)
+![restaurant info](screenshots/results3.png)
+![restaurant info](screenshots/results4.png)
 
 Find Directions:
 
-![directions search](/screenshots/directions-search.png)
-![directions](/screenshots/directions1.png)
+![directions search](screenshots/directions-search.png)
+![directions](screenshots/directions1.png)
 
 ## Created With
 * HTML
