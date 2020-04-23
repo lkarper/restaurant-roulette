@@ -34,7 +34,8 @@
         });
     }
 
-    function handleToTop() {
+    // Makes return to search button disappear on scroll then reappear after scrolling stops
+    function toggleToTop() {
         $(window).scroll(function() {
             if (!$('.js-to-top').hasClass('hidden')) {
                 $('.js-to-top').fadeOut('slow');
@@ -909,7 +910,7 @@
 
     function handleApp() {
         handleRestaurantForm();
-        handleToTop();
+        toggleToTop();
         returnToSearch();
     }
 
