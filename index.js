@@ -830,17 +830,26 @@
         if (marker1Coordinates[0] > marker2Coordinates[0] && marker1Coordinates[1] > marker2Coordinates[1]) {
             bounds = `${marker1Coordinates[0]},${marker2Coordinates[1]},${marker2Coordinates[0]},${marker1Coordinates[1]}`;
         }
+
         if (marker1Coordinates[0] > marker2Coordinates[0] && marker1Coordinates[1] < marker2Coordinates[1]) {
             bounds = `${marker1Coordinates[0]},${marker1Coordinates[1]},${marker2Coordinates[0]},${marker2Coordinates[1]}`;
         }
+
         if (marker1Coordinates[0] < marker2Coordinates[0] && marker1Coordinates[1] < marker2Coordinates[1]) {
             bounds = `${marker2Coordinates[0]},${marker1Coordinates[1]},${marker1Coordinates[0]},${marker2Coordinates[1]}`;
         }
+
         if (marker1Coordinates[0] < marker2Coordinates[0] && marker1Coordinates[1] > marker2Coordinates[1]) {
             bounds = `${marker2Coordinates[0]},${marker2Coordinates[1]},${marker1Coordinates[0]},${marker1Coordinates[1]}`;
         }
 
-        return `${mapBaseURL.replace(/&center.+&d/g, `&boundingBox=${bounds}&d`)}&margin=20`;
+        // Handle edge cases where only one marker is present on mapBaseURL, in which case bounds = undefined
+        if (bounds) {
+            return `${mapBaseURL.replace(/&center.+&d/g, `&boundingBox=${bounds}&d`)}&margin=20`;
+        }
+        
+        return mapBaseURL;
+        
     }
 
     function formatTime(seconds) {
