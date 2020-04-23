@@ -76,19 +76,14 @@
                             scrollTop: $('.js-restaurant').offset().top - 50
                         }, 'slow');
                     });
-                    console.log(response);
                     throw new Error(response.statusText);
                 } else {
                     toggleUtensilsAndRestaurant();
                     handleRestaurantAPIError();
-                    console.log(response);
                     throw new Error(response.statusText);
                 }
             })
-            .then(responseJson => {
-                console.log(queryCounter, responseJson);
-                loadRestaurants(responseJson);
-            })
+            .then(responseJson => loadRestaurants(responseJson))
             .catch(error => {
                 console.log('error', error);
                 if ($('.js-restaurant').hasClass('hidden')) {
@@ -266,7 +261,6 @@
         } else {
             const randomNum = Math.floor(Math.random() * restaurantQueryResults.length);
             const randomRestaurant = restaurantQueryResults[randomNum];
-            console.log(randomRestaurant);
 
             /**
             * Filters out restaurants returned by the API that do not belong in the requested catgory 
@@ -275,7 +269,6 @@
             if (checkCategories(randomRestaurant.venue.categories)) {
                 fetchDistance(`${randomRestaurant.venue.location.lat},${randomRestaurant.venue.location.lng}`, randomNum);
             } else {
-                console.log("false category removed", randomRestaurant);
                 restaurantQueryResults.splice(randomNum, 1);
                 splicedQueryResults = true;
                 pickRestaurant();
@@ -286,7 +279,6 @@
     function checkCategories(categoriesArray) {
         // The id '4bf58dd8d48988d1c4941735' indicates a generic search, meaning a category check is unnecessary
         if (currentCategories.find(id => id === '4bf58dd8d48988d1c4941735')) {
-            console.log("generic search");
             return true;
         } else {
             for (let queriedCategory of categoriesArray) {
@@ -310,14 +302,10 @@
                 } else {
                     toggleUtensilsAndRestaurant();
                     handleRestaurantAPIError();
-                    console.log(response);
                     throw new Error(response.statusText);
                 }
             })
-            .then(responseJson => {
-                console.log(responseJson, "fetchDistance results");
-                setAndCheckCurrentDistance(responseJson, randomNum);
-            })
+            .then(responseJson => setAndCheckCurrentDistance(responseJson, randomNum))
             .catch(error => {
                 console.log("error", error);
                 if ($('.js-restaurant').hasClass('hidden')) {
@@ -348,11 +336,8 @@
     }
 
     function setAndCheckCurrentDistance(data, randomNum) {
-        console.log("setting current distance");
         currentDistance = data.route.distance;
-        console.log(currentDistance, currentRadius)
         if (currentDistance > currentRadius) {
-            console.log("splicing too far", restaurantQueryResults[randomNum]);
             restaurantQueryResults.splice(randomNum, 1);
             splicedQueryResults = true;
             pickRestaurant();
@@ -374,7 +359,6 @@
                 } else {
                     toggleUtensilsAndRestaurant();
                     handleRestaurantAPIError();
-                    console.log(response);
                     throw new Error(response.statusText);
                 }
             })
@@ -391,7 +375,6 @@
     function displayRandomRestaurant(data) {
         toggleUtensilsAndRestaurant();
         $('.js-to-top').removeClass('hidden');
-        console.log(data);
         const restaurantInfo = data.response.venue;
         const restaurantInfoKeys = Object.keys(restaurantInfo);
         const name = restaurantInfo.name;
@@ -655,7 +638,6 @@
     function loadMap(latLong) {
         // Loads map with focus on restaurant
         const centerCoordinates = latLong.split(",").map(num => parseFloat(num)).reverse();
-        console.log(centerCoordinates);
         mapboxgl.accessToken = 'pk.eyJ1IjoibGthcnBlciIsImEiOiJjazh1NzRhZzMwN3hwM2VwNG0xZnM3c2JqIn0.dD8wiLFpEkdBZOdZt7N6VA';
         const map = new mapboxgl.Map({
             container: 'map',
@@ -725,7 +707,6 @@
                 if (response.ok) {
                     return response.json();
                 } else {
-                    console.log(response);
                     throw new Error(response.statusText);
                 }
             })
@@ -752,7 +733,6 @@
 
     function displayDirections(data) {
         $('.js-wheel').toggleClass('hidden');
-        console.log(data);
         if (data.info.statuscode !== 0) {
             $('.js-directions').html(`
                 <h2>Error:</h2>
