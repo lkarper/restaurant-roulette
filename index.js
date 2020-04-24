@@ -778,7 +778,7 @@
         for (let leg of legs) {
             for (let i = 0; i < leg.maneuvers.length; i++) {
                 if (i < leg.maneuvers.length - 1) {
-                    const mapURL = getDirectionsStepMapURL(`https${leg.maneuvers[i].mapUrl.slice(4)}`);
+                    const mapURL = encodeURI(getDirectionsStepMapURL(`https${leg.maneuvers[i].mapUrl.slice(4)}`));
                     directionsHTMLArray.push(`
                         <li>
                             <p><img src="https${leg.maneuvers[i].iconUrl.slice(4)}" alt="Route maneuver."> 
